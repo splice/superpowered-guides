@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Superpowered - Scheduling audio</title>
+    <meta charset="UTF-8" />
+    <link href="/css/styles.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <div class="container">
+      <img class="logo" src="/static/images/superpowered-blue.svg" />
+
+      <div class="controls">
+        <h1 class="demoTitle">Scheduling Audio</h1>
+
+        <button id="startButton" onclick="startApp()">START</button>
+
+        <div id="shonkyPiano">
+          <button
+            class="pianoKey"
+            onmousedown="startNote(220)"
+            onmouseup="stopNote()"
+          >
+            A
+          </button>
+          <button
+            class="pianoKey"
+            onmousedown="startNote(246.94)"
+            onmouseup="stopNote()"
+          >
+            B
+          </button>
+          <button
+            class="pianoKey"
+            onmousedown="startNote(261.63)"
+            onmouseup="stopNote()"
+          >
+            C
+          </button>
+          <button
+            class="pianoKey"
+            onmousedown="startNote(293.66)"
+            onmouseup="stopNote()"
+          >
+            D
+          </button>
+        </div>
+      </div>
+      </ol>
+    </div>
+
+    <script type="module" src="src/index.js"></script>
+  </body>
+</html>

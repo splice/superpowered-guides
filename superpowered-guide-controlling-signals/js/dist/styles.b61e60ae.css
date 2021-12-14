@@ -1,0 +1,62 @@
+body {
+  display: flex;
+  justify-content: center;
+  background: #37aee6;
+}
+
+.container {
+  /* color: white; */
+  background: white;
+  margin-top: 0px;
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 3px solid #37aee6;
+  border-radius: 8px;
+  padding: 24px;
+  flex-grow: 0;
+}
+
+button {
+  background: #37aee6;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: white;
+  border: 0;
+  font-weight: 800;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.logo {
+  height: 45px;
+  max-width: 100%;
+}
+
+.controls {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 0px;
+  width: 100%;
+}
+
+#bootedControls {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+}
+
+input {
+  margin-bottom: 20px;
+}
+
+
+/*# sourceMappingURL=/styles.b61e60ae.css.map */

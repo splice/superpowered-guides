@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Superpowered - Loading audio</title>
+    <meta charset="UTF-8" />
+    <link href="/css/styles.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <div class="container">
+      <img class="logo" src="/static/images/superpowered-white.svg" />
+      <div class="controls">
+        <h1 class="demoTitle">Loading audio</h1>
+        
+        
+          <span>Player volume</span>
+          <input
+            id="playerVolumeSlider"
+            disabled
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            defaultValue="0.5"
+            oninput="onParamChange('localPlayerVolume', Number(this.value))"
+          />
+          <span>Playback rate</span>
+          <input
+            id="playerSpeedSlider"
+            disabled
+            type="range"
+            min="0.003"
+            max="2"
+            step="0.001"
+            defaultValue="1"
+            oninput="onParamChange('localPlayerRate', Number(this.value))"
+          />
+          <button id="loadAssetButton" onclick="loadTrack()">
+            Load and play local track
+          </button>
+          <h4 id="trackLoadStatus"></h4>
+
+          <p>HLS streaming is not available in the Javascript Superpowered SDK.</h5>
+          <p>Please see the native example for HLS</p>
+      </div>
+    </div>
+    <script type="module" src="src/index.js"></script>
+  </body>
+</html>

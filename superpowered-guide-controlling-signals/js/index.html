@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Superpowered - Controlling signals</title>
+    <meta charset="UTF-8" />
+    <link href="/css/styles.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <div class="container">
+      <img class="logo" src="/static/images/superpowered-blue.svg" />
+
+      <div class="controls">
+        <h1 class="demoTitle">Controlling signals demo</h1>
+
+        <button id="startButton" disabled onclick="resumeContext()">
+          START
+        </button>
+
+        <div id="bootedControls">
+          <label>Osc 1 Volume <span id="osc1Vol">0.5</span></label>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value="0.7"
+            oninput="onParamChange('osc1Vol', this.value)"
+          />
+          <label>Osc 1 Frequency <span id="osc1Freq">110</span>Hz</label>
+          <input
+            type="range"
+            min="20"
+            max="2000"
+            step="0.1"
+            value="110"
+            oninput="onParamChange('osc1Freq', this.value)"
+          />
+          <label>Osc 2 Volume <span id="osc2Vol">0.5</span></label>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value="0.7"
+            oninput="onParamChange('osc2Vol', this.value)"
+          />
+          <label>Osc 2 Frequency <span id="osc2Freq">220</span>Hz</label>
+          <input
+            type="range"
+            min="20"
+            max="2000"
+            step="0.1"
+            value="220"
+            oninput="onParamChange('osc2Freq', this.value)"
+          />
+        </div>
+      </div>
+    </div>
+    <script type="module" src="src/index.js"></script>
+  </body>
+</html>

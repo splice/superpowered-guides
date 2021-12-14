@@ -1,0 +1,13 @@
+{
+  "name": "superpowered-guide-loading-audio-js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.html",
+  "scripts": {
+    "dev": "http-server -c-1"
+  },
+  "devDependencies": {
+    "http-server": "^14.0.0"
+  },
+  "keywords": []
+}
