@@ -9,26 +9,14 @@
 #import "Superpowered.h"
 #import "SuperpoweredSimple.h"
 #import "SuperpoweredOSXAudioIO.h"
-#import "SuperpoweredGenerator.h"
 #import "SuperpoweredAdvancedAudioPlayer.h"
 #import <atomic>
-
-
-// some HLS stream url-title pairs
-//static const char *urls[8] = {
-//    "https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8", "Apple Advanced Example Stream",
-//    "http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8", "Back to the Mac",
-//    "http://playertest.longtailvideo.com/adaptive/bbbfull/bbbfull.m3u8", "JW Player Test",
-//    "http://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8", "JW AES Encrypted",
-//};
 
 @interface ViewController ()
 @property (nonatomic, strong) SuperpoweredOSXAudioIO *superpowered;
 @property (weak) IBOutlet NSSlider *localPlaybackRate;
 @property (weak) IBOutlet NSSlider *localGain;
-@property (weak) IBOutlet NSTextField *localTempo;
 @property (weak) IBOutlet NSSlider *remoteVolume;
-@property (weak) IBOutlet NSTextField *remoteUrl;
 @property (weak) IBOutlet NSButton *playLocalButton;
 @property (weak) IBOutlet NSButton *playRemoteButton;
 
@@ -36,10 +24,7 @@
 
 @implementation ViewController {
     Superpowered::AdvancedAudioPlayer *playerA, *playerB;
-    
-    std::atomic<float> localGainValue, localTempoValue, remoteGainValue;
-    
-    bool playingA, playingB, localReady, remoteReady;
+    std::atomic<float> localGainValue, localPlaybackRateValue, remoteGainValue;
 }
 
 - (void)viewDidLoad {
@@ -55,75 +40,83 @@
      false, // enableCryptographics (using Superpowered::RSAPublicKey, Superpowered::RSAPrivateKey, Superpowered::hasher or Superpowered::AES)
      false  // enableNetworking (using Superpowered::httpRequest)
     );
-    
-    Superpowered::AdvancedAudioPlayer::setTempFolder([NSTemporaryDirectory() fileSystemRepresentation]);
-
-    // Do any additional setup after loading the view.
     NSLog(@"Superpowered version: %u", Superpowered::Version());
     
+    
+    // First let Superpowered know where it can store is temporary files used for buffereing HLS
+    Superpowered::AdvancedAudioPlayer::setTempFolder([NSTemporaryDirectory() fileSystemRepresentation]);
+    
+    // Create two instances of the AdvancedAudioPlayer class, which we'll use to play our local and HLS stream
     playerA = new Superpowered::AdvancedAudioPlayer(48000, 0);
     playerB = new Superpowered::AdvancedAudioPlayer(48000, 0);
     
+    
+    // Tell the first player to open a local file
     playerA->open([[[NSBundle mainBundle] pathForResource:@"lycka" ofType:@"mp3"] fileSystemRepresentation]);
     
+    // Tell the second player to open remote HLS stream (apple HLS test stream)
     playerB->openHLS("http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8");
+    // Set the maximum buffer size in seconds
+    playerB->HLSBufferingSeconds = 20;
+    // Fast forward in the stream a bi before playback
+    playerB->setPosition(6000, true, false);
     
+    // Set current atomic floats from the UI sliders
     [self setVariables];
-    
-//    triggerPlay.enabled = false;
 
-    self.superpowered = [[SuperpoweredOSXAudioIO alloc] initWithDelegate:(id<SuperpoweredOSXAudioIODelegate>)self preferredBufferSizeMs:12 numberOfChannels:2 enableInput:true enableOutput:true];
+    // Setup superpowered
+    self.superpowered = [[SuperpoweredOSXAudioIO alloc] initWithDelegate:(id<SuperpoweredOSXAudioIODelegate>)self preferredBufferSizeMs:12 numberOfChannels:2 enableInput:false enableOutput:true];
+    
+    // Start the scheduling of audioProcessingCallback
     [self.superpowered start];
 }
 
 - (bool)audioProcessingCallback:(float **)inputBuffers inputChannels:(unsigned int)inputChannels outputBuffers:(float **)outputBuffers outputChannels:(unsigned int)outputChannels numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
   
+    // Our output buffer (which we'll convert later)
     float outputBuffer[numberOfFrames * 2];
   
-    playerA->playbackRate = localTempoValue;
+    // Set the playback rate of the PlayerA to current atomic variable value
+    playerA->playbackRate = localPlaybackRateValue;
     
     // Check player statuses. We're only interested in the Opened event in this example.
     if (playerA->getLatestEvent() == Superpowered::AdvancedAudioPlayer::PlayerEvent_Opened) {
-        localReady = true;
+        // allow the user to click the play button for playerA
         self.playLocalButton.enabled = true;
     };
-    if (playerB->getLatestEvent() == Superpowered::AdvancedAudioPlayer::PlayerEvent_Opened) {
-        remoteReady = true;
-        self.playRemoteButton.enabled = true;
-    };
-
+   
+    // Store the output of player A into out outputbuffer, checking if it creates silence along the way
     bool silence = !playerA->processStereo(outputBuffer, false, numberOfFrames, localGainValue);
     
+    // If silence, then write player B to the output buffer
+    // If no silence, set the mix parameter of playerB's processStereo to true to mix its output into playerA's output
     if (playerB->processStereo(outputBuffer, !silence, numberOfFrames, remoteGainValue)) silence = false;
+    
     // The output buffer is ready now, let's put the finished audio into the left and right outputs.
     if (!silence) Superpowered::DeInterleave(outputBuffer, outputBuffers[0], outputBuffers[1], numberOfFrames);
     return !silence;
 }
 
 - (IBAction)playLocalAudio:(id)sender {
-    if (localReady) {
+    // Check we are able to play local file
+    if (self.playLocalButton.enabled) {
         playerA->play();
-        playingA = true;
+        self.playLocalButton.enabled = false;
     }
 }
 
 - (IBAction)playRemote:(id)sender {
-    if (remoteReady) {
-        playerB->play();
-        playingB = true;
-    }
+    playerB->play();
+    self.playRemoteButton.enabled = false;
 }
-
 
 - (IBAction)updateParams:(id)sender {
     [self setVariables];
 }
 
-
-
 - (void)setVariables {
     localGainValue =  self.localGain.floatValue;
-    localTempoValue =  self.localPlaybackRate.floatValue;
+    localPlaybackRateValue =  self.localPlaybackRate.floatValue;
     remoteGainValue =  self.remoteVolume.floatValue;
 }
 

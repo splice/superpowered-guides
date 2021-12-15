@@ -736,7 +736,7 @@
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yo3-t4-LwZ">
                                                         <rect key="frame" x="66" y="13" width="194" height="19"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <buttonCell key="cell" type="roundRect" title="Play HLS Stream" bezelStyle="roundedRect" alignment="center" lineBreakMode="truncatingTail" enabled="NO" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gU3-c3-ETG">
+                                                        <buttonCell key="cell" type="roundRect" title="Play HLS Stream" bezelStyle="roundedRect" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gU3-c3-ETG">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                             <font key="font" metaFont="cellTitle"/>
                                                         </buttonCell>
@@ -777,7 +777,7 @@
                             <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uCn-Kq-Jag">
                                 <rect key="frame" x="99" y="231" width="282" height="28"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <sliderCell key="cell" continuous="YES" alignment="left" minValue="0.0030000000000000001" maxValue="2" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="FXG-sh-HvW"/>
+                                <sliderCell key="cell" continuous="YES" alignment="left" minValue="0.5" maxValue="2" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="FXG-sh-HvW"/>
                                 <connections>
                                     <action selector="updateParams:" target="XfG-lQ-9wD" id="RIn-u4-3aF"/>
                                 </connections>
