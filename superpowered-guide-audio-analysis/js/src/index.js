@@ -94,8 +94,8 @@ class DemoApplication {
     this.inputCanvasContext = this.inputCanvas.getContext("2d");
     this.outputCanvas = document.getElementById("outputPeakMeter");
     this.outputCanvasContext = this.outputCanvas.getContext("2d");
-    this.inputCanvasContext.fillStyle = "#37aee6";
-    this.outputCanvasContext.fillStyle = "#37aee6";
+    this.inputCanvasContext.fillStyle = "#1254fe";
+    this.outputCanvasContext.fillStyle = "#1254fe";
     const superPoweredWasmLocation = "/static/superpowered/superpowered.wasm";
     const minimumSampleRate = 48000;
     const analysisProcessorUrl = "/static/processors/analysisProcessor.js";
