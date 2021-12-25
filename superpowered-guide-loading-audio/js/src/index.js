@@ -16,6 +16,7 @@ class DemoApplication {
     this.startButtonRef = document.getElementById("startButton");
     this.playerVolumeRef = document.getElementById("playerVolumeSlider");
     this.playerSpeedRef = document.getElementById("playerSpeedSlider");
+    this.playerPitchRef = document.getElementById("playerPitchSlider");
     this.loadAssetButtonRef = document.getElementById("loadAssetButton");
     this.trackLoadingStatusRef = document.getElementById("trackLoadStatus");
     this.startApp();
@@ -29,6 +30,7 @@ class DemoApplication {
       this.loadAssetButtonRef.style.display = "none";
       this.playerVolumeRef.disabled = false;
       this.playerSpeedRef.disabled = false;
+      this.playerPitchRef.disabled = false;
       this.trackLoadingStatusRef.style.display = "none";
     }
   }

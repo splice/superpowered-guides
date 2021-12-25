@@ -688,7 +688,7 @@
                     <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="196" y="240" width="480" height="270"/>
+                        <rect key="contentRect" x="196" y="240" width="449" height="408"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
                         <connections>
                             <outlet property="delegate" destination="B8D-0N-5wS" id="98r-iN-zZc"/>
@@ -700,7 +700,7 @@
                 </windowController>
                 <customObject id="Oky-zY-oP4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="250"/>
+            <point key="canvasLocation" x="59.5" y="319"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="hIz-AP-VOD">
@@ -710,10 +710,24 @@
                         <rect key="frame" x="0.0" y="0.0" width="450" height="404"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
+                            <box fixedFrame="YES" boxType="custom" borderWidth="0.0" cornerRadius="4" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="Mdh-oN-0Bq">
+                                <rect key="frame" x="0.0" y="0.0" width="450" height="404"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <view key="contentView" id="pTK-Qc-5sQ">
+                                    <rect key="frame" x="0.0" y="0.0" width="450" height="404"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                                <color key="fillColor" red="0.9730278094" green="0.9730278094" blue="0.9730278094" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </box>
                             <view wantsLayer="YES" appearanceType="aqua" id="aoO-YP-QRx">
                                 <rect key="frame" x="-21" y="88" width="449" height="404"/>
                                 <autoresizingMask key="autoresizingMask"/>
                             </view>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cR8-YL-ZuT">
+                                <rect key="frame" x="0.0" y="0.0" width="450" height="326"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="bg" id="Bgp-W5-f9m"/>
+                            </imageView>
                             <box autoresizesSubviews="NO" fixedFrame="YES" boxType="custom" borderType="none" cornerRadius="15" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="uIE-2k-Wde">
                                 <rect key="frame" x="0.0" y="0.0" width="450" height="404"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -754,7 +768,7 @@
                                                     <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BDQ-Rf-ft9">
                                                         <rect key="frame" x="22" y="172" width="282" height="28"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="0.40000000000000002" tickMarkPosition="above" sliderType="linear" id="isa-GM-OvN"/>
+                                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="0.20000000000000001" tickMarkPosition="above" sliderType="linear" id="isa-GM-OvN"/>
                                                         <connections>
                                                             <action selector="parmChanged:" target="XfG-lQ-9wD" id="PAk-qX-nKc"/>
                                                         </connections>
@@ -762,7 +776,7 @@
                                                     <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OUf-Is-NaQ">
                                                         <rect key="frame" x="22" y="77" width="282" height="28"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="0.57989998750908434" tickMarkPosition="above" sliderType="linear" id="VKY-a2-ObU"/>
+                                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" sliderType="linear" id="VKY-a2-ObU"/>
                                                         <connections>
                                                             <action selector="parmChanged:" target="XfG-lQ-9wD" id="JRa-OM-JVI"/>
                                                         </connections>
@@ -853,7 +867,7 @@
                                         </box>
                                     </subviews>
                                 </view>
-                                <color key="fillColor" red="0.33074790240000002" green="0.59734433890000005" blue="0.78434401750000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="fillColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                             </box>
                         </subviews>
                     </view>
@@ -865,10 +879,11 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="117" y="707"/>
+            <point key="canvasLocation" x="60" y="773"/>
         </scene>
     </scenes>
     <resources>
         <image name="Logo" width="178" height="26"/>
+        <image name="bg" width="1440" height="560"/>
     </resources>
 </document>

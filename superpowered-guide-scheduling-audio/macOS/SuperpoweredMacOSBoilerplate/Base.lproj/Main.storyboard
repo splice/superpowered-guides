@@ -718,6 +718,11 @@
                                     <rect key="frame" x="0.0" y="0.0" width="450" height="308"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
+                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ppR-kI-xf8">
+                                            <rect key="frame" x="-8" y="-19" width="466" height="307"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="axesIndependently" image="BG" id="yof-Hq-y1H"/>
+                                        </imageView>
                                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WVG-bQ-Iwj">
                                             <rect key="frame" x="112" y="246" width="226" height="62"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -731,9 +736,9 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GIR-wr-haJ">
-                                                        <rect key="frame" x="80" y="134" width="167" height="23"/>
+                                                        <rect key="frame" x="81" y="134" width="165" height="23"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Scheduling Audio" id="swp-8K-bn4">
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Scheduling audio" id="swp-8K-bn4">
                                                             <font key="font" metaFont="systemBold" size="19"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -751,7 +756,7 @@
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
                                                         </buttonCell>
-                                                        <color key="bezelColor" red="0.3059012592" green="0.68338149790000002" blue="0.8995862603" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="bezelColor" red="0.15481090550000001" green="0.32014587519999999" blue="0.96084862950000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     </button>
                                                     <button identifier="b" autoresizesSubviews="NO" verticalHuggingPriority="750" fixedFrame="YES" springLoaded="YES" translatesAutoresizingMaskIntoConstraints="NO" id="30J-Wp-IGY" customClass="CustomButton">
                                                         <rect key="frame" x="111" y="65" width="52" height="32"/>
@@ -760,7 +765,7 @@
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                             <font key="font" metaFont="system"/>
                                                         </buttonCell>
-                                                        <color key="bezelColor" red="0.3059012592" green="0.68338149790000002" blue="0.8995862603" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="bezelColor" red="0.15481090550000001" green="0.32014587519999999" blue="0.96084862950000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     </button>
                                                     <button identifier="c" autoresizesSubviews="NO" verticalHuggingPriority="750" fixedFrame="YES" springLoaded="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bbV-E8-4si" customClass="CustomButton">
                                                         <rect key="frame" x="163" y="65" width="52" height="32"/>
@@ -769,7 +774,7 @@
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                             <font key="font" metaFont="system"/>
                                                         </buttonCell>
-                                                        <color key="bezelColor" red="0.3059012592" green="0.68338149790000002" blue="0.8995862603" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="bezelColor" red="0.15481090550000001" green="0.32014587519999999" blue="0.96084862950000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     </button>
                                                     <button identifier="d" autoresizesSubviews="NO" verticalHuggingPriority="750" springLoaded="YES" id="LxL-8Q-ce5" customClass="CustomButton">
                                                         <rect key="frame" x="215" y="61" width="52" height="40"/>
@@ -778,7 +783,7 @@
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                             <font key="font" metaFont="system"/>
                                                         </buttonCell>
-                                                        <color key="bezelColor" red="0.3059012592" green="0.68338149790000002" blue="0.8995862603" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="bezelColor" red="0.15481090550000001" green="0.32014587519999999" blue="0.96084862950000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     </button>
                                                 </subviews>
                                             </view>
@@ -786,7 +791,7 @@
                                         </box>
                                     </subviews>
                                 </view>
-                                <color key="fillColor" red="0.33074790240000002" green="0.59734433890000005" blue="0.78434401750000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="fillColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </box>
                         </subviews>
                     </view>
@@ -804,6 +809,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="BG" width="1440" height="560"/>
         <image name="Logo" width="178" height="26"/>
     </resources>
 </document>

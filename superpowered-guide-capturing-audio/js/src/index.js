@@ -30,8 +30,6 @@ class DemoApplication {
   };
 
   onParamChange = (id, value) => {
-    document.getElementById(id).innerHTML = value;
-
     // Here we send the new Reverb Size value over to the audio thread to be applied
     this.processorNode.sendMessageToAudioScope({
       type: "parameterChange",

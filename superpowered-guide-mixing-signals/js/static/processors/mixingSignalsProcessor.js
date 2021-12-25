@@ -65,7 +65,7 @@ class MixingSignalsProcessor extends SuperpoweredWebAudio.AudioWorkletProcessor 
     );
 
     // Mixes up to 4 mono inputs into a mono output. We only need to use two of them, the others are empty arrays.
-    // Send output of this.mixer to the AudioWOrklet output buffer
+    // Send output of this.mixer to the AudioWorklet output buffer
     this.mixer.process(
       this.gen1OutputBuffer.pointer, // Pointer to floating point numbers. 32-bit input buffer for the first input. Can be null.
       this.gen2OutputBuffer.pointer, // Pointer to floating point numbers. 32-bit input buffer for the second input. Can be null.

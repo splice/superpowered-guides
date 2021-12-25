@@ -11,7 +11,6 @@
 #import "SuperpoweredOSXAudioIO.h"
 #import "SuperpoweredGenerator.h"
 #import "SuperpoweredMixer.h"
-#import <atomic>
 
 @interface ViewController ()
 @property (nonatomic, strong) SuperpoweredOSXAudioIO *superpowered;
@@ -25,7 +24,7 @@
 @property (nonatomic, weak) IBOutlet NSSlider *gen1Frequency;
 @property (weak) IBOutlet NSTextField *gen1FrequencyLabel;
 
-@property (nonatomic, weak) IBOutlet NSSlider *gen2Frequency;
+@property (weak) IBOutlet NSSlider *gen2Frequency;
 @property (weak) IBOutlet NSTextField *gen2FrequencyLabel;
 
 
@@ -37,7 +36,6 @@
     Superpowered::Generator *generator1;
     Superpowered::Generator *generator2;
     Superpowered::MonoMixer *monoMixer;
-    std::atomic<bool> isUpdatingValues;
     float vol1, vol2, freq1, freq2;
 }
 
@@ -71,7 +69,6 @@
 }
 
 - (void)setVariables {
-        isUpdatingValues = true;
         freq1 = self.gen1Frequency.floatValue;
         self.gen1FrequencyLabel.stringValue = [NSString stringWithFormat:@"%.2f Hz", self.gen1Frequency.floatValue];
         freq2 = self.gen2Frequency.floatValue;
@@ -80,7 +77,6 @@
         self.gen1GainLabel.stringValue = [NSString stringWithFormat:@"%.2f", self.gen1Gain.floatValue];
         vol2 = self.gen2Gain.floatValue;
         self.gen2GainLabel.stringValue = [NSString stringWithFormat:@"%.2f", self.gen2Gain.floatValue];
-        isUpdatingValues = false;
 }
 
 
@@ -89,12 +85,10 @@
     float gen1OutputBuffer[numberOfFrames];
     float gen2OutputBuffer[numberOfFrames];
     
-    if (!isUpdatingValues) {
-        generator1->frequency = freq1;
-        generator2->frequency = freq2;
-        monoMixer->inputGain[0] = vol1;
-        monoMixer->inputGain[1] = vol2;
-    }
+    generator1->frequency = freq1;
+    generator2->frequency = freq2;
+    monoMixer->inputGain[0] = vol1;
+    monoMixer->inputGain[1] = vol2;
     
     generator1->generate(gen1OutputBuffer, numberOfFrames);
     generator2->generate(gen2OutputBuffer, numberOfFrames);

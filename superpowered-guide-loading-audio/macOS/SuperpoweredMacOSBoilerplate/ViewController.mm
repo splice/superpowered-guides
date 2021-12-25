@@ -15,6 +15,7 @@
 @interface ViewController ()
 @property (nonatomic, strong) SuperpoweredOSXAudioIO *superpowered;
 @property (weak) IBOutlet NSSlider *localPlaybackRate;
+@property (weak) IBOutlet NSSlider *localPlaybackPitch;
 @property (weak) IBOutlet NSSlider *localGain;
 @property (weak) IBOutlet NSSlider *remoteVolume;
 @property (weak) IBOutlet NSButton *playLocalButton;
@@ -24,7 +25,7 @@
 
 @implementation ViewController {
     Superpowered::AdvancedAudioPlayer *playerA, *playerB;
-    std::atomic<float> localGainValue, localPlaybackRateValue, remoteGainValue;
+    float localGainValue, localPlaybackRateValue, localPlaybackPitchValue, remoteGainValue;
 }
 
 - (void)viewDidLoad {
@@ -78,6 +79,7 @@
   
     // Set the playback rate of the PlayerA to current atomic variable value
     playerA->playbackRate = localPlaybackRateValue;
+    playerA->pitchShiftCents = localPlaybackPitchValue;
     
     // Check player statuses. We're only interested in the Opened event in this example.
     if (playerA->getLatestEvent() == Superpowered::AdvancedAudioPlayer::PlayerEvent_Opened) {
@@ -117,6 +119,7 @@
 - (void)setVariables {
     localGainValue =  self.localGain.floatValue;
     localPlaybackRateValue =  self.localPlaybackRate.floatValue;
+    localPlaybackPitchValue =  self.localPlaybackPitch.floatValue;
     remoteGainValue =  self.remoteVolume.floatValue;
 }
 

@@ -1,8 +1,5 @@
 // Import the SuperpoweredWebAudio helper to allow us to extend the SuperpoweredWebAudio.AudioWorkletProcessor class
-import {
-  SuperpoweredWebAudio,
-  SuperpoweredTrackLoader
-} from "../superpowered/SuperpoweredWebAudio.js";
+import { SuperpoweredWebAudio } from "../superpowered/SuperpoweredWebAudio.js";
 
 class PlayerProcessor extends SuperpoweredWebAudio.AudioWorkletProcessor {
   // Runs after the constructor
@@ -41,6 +38,9 @@ class PlayerProcessor extends SuperpoweredWebAudio.AudioWorkletProcessor {
       if (message.payload.id === "localPlayerRate") {
         this.player.playbackRate = message.payload.value;
       }
+      if (message.payload.id === "localPlayerPitch") {
+        this.player.pitchShiftCents = message.payload.value;
+      }
     }
     if (message.SuperpoweredLoaded) {
       this.player.pause();
@@ -59,18 +59,15 @@ class PlayerProcessor extends SuperpoweredWebAudio.AudioWorkletProcessor {
   processAudio(inputBuffer, outputBuffer, buffersize, parameters) {
     if (
       !this.sampleLoaded ||
-      !this.player.processStereo(outputBuffer.pointer, false, buffersize, 1)
+      !this.player.processStereo(
+        outputBuffer.pointer,
+        false,
+        buffersize,
+        this.playerGain
+      )
     ) {
       for (let n = 0; n < buffersize * 2; n++) outputBuffer.array[n] = 0;
     }
-
-    this.Superpowered.Volume(
-      outputBuffer.pointer,
-      outputBuffer.pointer,
-      this.playerGain,
-      this.playerGain,
-      buffersize
-    );
   }
 }
 

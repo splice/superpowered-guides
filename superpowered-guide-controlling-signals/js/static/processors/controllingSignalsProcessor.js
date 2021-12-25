@@ -17,8 +17,9 @@ class ControllingSignalsProcessor extends SuperpoweredWebAudio.AudioWorkletProce
     // Create an instance of a Superpowered MonoMixer
     this.mixer = new this.Superpowered.MonoMixer();
 
-    this.gen1OutputBuffer = new this.Superpowered.Float32Buffer(256); // A floating point number is 4 bytes, therefore we allocate length * 4 bytes of memory.
-    this.gen2OutputBuffer = new this.Superpowered.Float32Buffer(256);
+    this.gen1OutputBuffer = new this.Superpowered.Float32Buffer(4096); // A floating point number is 4 bytes, therefore we allocate length * 4 bytes of memory.
+    this.gen2OutputBuffer = new this.Superpowered.Float32Buffer(4096);
+    this.monoMixerOutputBuffer = new this.Superpowered.Float32Buffer(4096);
     this.generator1.frequency = 110;
     this.generator2.frequency = 220;
 
@@ -53,13 +54,13 @@ class ControllingSignalsProcessor extends SuperpoweredWebAudio.AudioWorkletProce
     // generate the first signal
     this.generator1.generate(
       this.gen1OutputBuffer.pointer, // output, // Pointer to floating point numbers. 32-bit MONO output.
-      buffersize * 2 // we multiple this by two becuase .generate returns a monto signal whereas the outputBuffer is interleaved stereo.
+      buffersize
     );
 
     // generate the first signal
     this.generator2.generate(
       this.gen2OutputBuffer.pointer, // output, // Pointer to floating point numbers. 32-bit MONO output.
-      buffersize * 2 // we multiple this by two becuase .generate returns a monto signal whereas the outputBuffer is interleaved stereo.
+      buffersize
     );
 
     this.mixer.inputGain[0] = this.gen1Volume;
@@ -70,8 +71,16 @@ class ControllingSignalsProcessor extends SuperpoweredWebAudio.AudioWorkletProce
       this.gen2OutputBuffer.pointer, // Pointer to floating point numbers. 32-bit input buffer for the second input. Can be null.
       0, // no input to channel 3
       0, // no input to channel 4
-      outputBuffer.pointer, // Pointer to floating point numbers. 32-bit output buffer.
-      buffersize * 2 // Number of frames to process. Must be a multiple of 4.
+      this.monoMixerOutputBuffer.pointer, // Pointer to floating point numbers. 32-bit output buffer.
+      buffersize
+    );
+
+    //Convert the mono mixer output into the stereo signal that the AudioWorklet requires.
+    this.Superpowered.Interleave(
+      this.monoMixerOutputBuffer.pointer,
+      this.monoMixerOutputBuffer.pointer,
+      outputBuffer.pointer,
+      buffersize
     );
   }
 }

@@ -717,6 +717,16 @@
                                     <rect key="frame" x="0.0" y="0.0" width="480" height="600"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
+                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tXg-k0-jCh">
+                                            <rect key="frame" x="0.0" y="-76" width="503" height="820"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="BG" id="dr3-Yg-nIJ"/>
+                                        </imageView>
+                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bnx-Ur-p9K">
+                                            <rect key="frame" x="77" y="523" width="326" height="77"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="Logo" id="tBo-Iy-X7Q"/>
+                                        </imageView>
                                         <box fixedFrame="YES" boxType="custom" borderWidth="0.0" cornerRadius="15" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="QUQ-Ti-JGR">
                                             <rect key="frame" x="77" y="147" width="327" height="373"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -725,9 +735,9 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Ic-z6-VQz">
-                                                        <rect key="frame" x="65" y="321" width="196" height="33"/>
+                                                        <rect key="frame" x="67" y="321" width="192" height="33"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Loading Audio" id="eLJ-3E-Vcb">
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Loading audio" id="eLJ-3E-Vcb">
                                                             <font key="font" metaFont="systemBold" size="28"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -745,18 +755,31 @@
                                                             <action selector="playRemote:" target="XfG-lQ-9wD" id="1Oc-C8-KTe"/>
                                                         </connections>
                                                     </button>
+                                                    <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="53J-rK-Hqj">
+                                                        <rect key="frame" x="22" y="156" width="282" height="28"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <sliderCell key="cell" continuous="YES" alignment="left" minValue="-1200" maxValue="1200" tickMarkPosition="above" sliderType="linear" id="h1I-a4-jDm"/>
+                                                        <connections>
+                                                            <action selector="updateParams:" target="XfG-lQ-9wD" id="4vG-GH-8Vg"/>
+                                                        </connections>
+                                                    </slider>
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vEa-N0-XLM">
+                                                        <rect key="frame" x="97" y="182" width="132" height="16"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Local playback pitch" id="boU-yf-Y4f">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
                                                 </subviews>
                                             </view>
                                             <color key="fillColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                         </box>
-                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bnx-Ur-p9K">
-                                            <rect key="frame" x="77" y="523" width="326" height="77"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="Logo" id="tBo-Iy-X7Q"/>
-                                        </imageView>
                                     </subviews>
                                 </view>
-                                <color key="fillColor" red="0.33074790240000002" green="0.59734433890000005" blue="0.78434401750000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="borderColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="fillColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </box>
                             <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oPY-kP-DK9">
                                 <rect key="frame" x="99" y="290" width="282" height="28"/>
@@ -775,7 +798,7 @@
                                 </connections>
                             </slider>
                             <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uCn-Kq-Jag">
-                                <rect key="frame" x="99" y="231" width="282" height="28"/>
+                                <rect key="frame" x="99" y="240" width="282" height="28"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <sliderCell key="cell" continuous="YES" alignment="left" minValue="0.5" maxValue="2" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="FXG-sh-HvW"/>
                                 <connections>
@@ -801,7 +824,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rPV-YR-6GD">
-                                <rect key="frame" x="178" y="262" width="126" height="16"/>
+                                <rect key="frame" x="178" y="268" width="126" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Local playback rate" id="JUD-Hw-Nzd">
                                     <font key="font" metaFont="system"/>
@@ -810,9 +833,9 @@
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="apk-Zw-ux1">
-                                <rect key="frame" x="147" y="203" width="185" height="19"/>
+                                <rect key="frame" x="147" y="173" width="185" height="19"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="roundRect" title="Play local file" bezelStyle="roundedRect" alignment="center" lineBreakMode="truncatingTail" enabled="NO" state="on" borderStyle="border" inset="2" id="Ysy-B0-rDP">
+                                <buttonCell key="cell" type="roundRect" title="Play local file" bezelStyle="roundedRect" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" inset="2" id="Ysy-B0-rDP">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="cellTitle"/>
                                 </buttonCell>
@@ -826,6 +849,7 @@
                     </view>
                     <connections>
                         <outlet property="localGain" destination="oPY-kP-DK9" id="T5M-4w-oRT"/>
+                        <outlet property="localPlaybackPitch" destination="53J-rK-Hqj" id="51w-d6-UmX"/>
                         <outlet property="localPlaybackRate" destination="uCn-Kq-Jag" id="SP6-Vx-c0R"/>
                         <outlet property="localTempo" destination="rPV-YR-6GD" id="Tk6-48-kiN"/>
                         <outlet property="playLocalButton" destination="apk-Zw-ux1" id="Y0z-wK-bUe"/>
@@ -840,6 +864,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="BG" width="1440" height="560"/>
         <image name="Logo" width="178" height="26"/>
     </resources>
 </document>

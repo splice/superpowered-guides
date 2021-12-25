@@ -14,13 +14,11 @@
 
 @interface ViewController ()
 @property (nonatomic, strong) SuperpoweredOSXAudioIO *superpowered;
-@property (weak) IBOutlet NSButton *startButton;
 @end
 
 @implementation ViewController {
     Superpowered::Generator *generator1;
     Superpowered::Generator *generator2;
-    Superpowered::Generator *generator3;
     Superpowered::MonoMixer *monoMixer;
     float globalVolume;
 }

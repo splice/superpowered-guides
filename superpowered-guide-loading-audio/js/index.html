@@ -13,7 +13,6 @@
       <div class="controls">
         <h2 class="demoTitle">Loading audio</h2>
         
-        
           <span>Player volume</span>
           <input
             id="playerVolumeSlider"
@@ -30,18 +29,29 @@
             id="playerSpeedSlider"
             disabled
             type="range"
-            min="0.003"
+            min="0.3"
             max="2"
             step="0.001"
             defaultValue="1"
             oninput="onParamChange('localPlayerRate', Number(this.value))"
           />
+          <span>Playback pitch</span>
+          <input
+            id="playerPitchSlider"
+            disabled
+            type="range"
+            min="-1200"
+            max="1200"
+            step="1"
+            defaultValue="0"
+            oninput="onParamChange('localPlayerPitch', Number(this.value))"
+          />
           <button id="loadAssetButton" onclick="loadTrack()">
-            Load and play local track
+            Download and play audio
           </button>
           <h4 id="trackLoadStatus"></h4>
           
-          <p>HLS streaming is not available in the Javascript Superpowered SDK.</br>
+          <p>Please note: HLS streaming is not available in the WebAssembly Superpowered Audio SDK.</br>
           Please see the native example for HLS</p>
       </div>
     </div>

@@ -26,8 +26,7 @@
     Superpowered::StereoMixer *stereoMixer;
     Superpowered::Filter *filter;
     Superpowered::Reverb *reverb;
-    std::atomic<bool> isUpdatingValues;
-    float inputGain, reverbMix, filterFrequency;
+    float inputGain, previousInputGain, reverbMix, filterFrequency;
 }
 
 - (void)viewDidLoad {
@@ -47,7 +46,6 @@
     // Do any additional setup after loading the view.
     NSLog(@"Superpowered version: %u", Superpowered::Version());
     
-    stereoMixer = new Superpowered::StereoMixer();
     reverb = new Superpowered::Reverb(48000, 48000);
     filter = new Superpowered::Filter(
       Superpowered::Filter::FilterType::Resonant_Lowpass,
@@ -57,7 +55,9 @@
     reverb->enabled = true;
     filter->enabled = true;
     
-    stereoMixer->inputGain[0] = stereoMixer->inputGain[1] =  0.3;
+    inputGain = 0.2;
+    previousInputGain = 0.2;
+    
 
     self.superpowered = [[SuperpoweredOSXAudioIO alloc] initWithDelegate:(id<SuperpoweredOSXAudioIODelegate>)self preferredBufferSizeMs:12 numberOfChannels:2 enableInput:true enableOutput:true];
     [self setVariables];
@@ -65,11 +65,9 @@
 }
 
 - (void)setVariables {
-    isUpdatingValues = true;
     inputGain = self.inputGainSlider.floatValue;
     filterFrequency = self.filterFrequencySlider.floatValue;
     reverbMix = self.reverbMixSlider.floatValue;
-    isUpdatingValues = false;
 }
 
 - (bool)audioProcessingCallback:(float **)inputBuffers inputChannels:(unsigned int)inputChannels outputBuffers:(float **)outputBuffers outputChannels:(unsigned int)outputChannels numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
@@ -80,24 +78,14 @@
     // THen we create that streo signal from the mono input signal
     Superpowered::Interleave(inputBuffers[0], inputBuffers[0], stereoInputBuffer, numberOfFrames);
 
-    // We then apply the current values to the classes (if not currently updating)
-    if (!isUpdatingValues) {
-        reverb->mix = reverbMix;
-        filter->frequency = filterFrequency;
-        stereoMixer->inputGain[0] = stereoMixer->inputGain[1] =  inputGain;
-    }
-
-    // Then pass the stereoINputBuffer into the gain controlled StereoMixer
-    // Processing is performaed 'in-place'
+    // We then apply the current values to the classes
     
-    stereoMixer->process(
-        stereoInputBuffer,
-        NULL,
-        NULL,
-        NULL,
-        stereoInputBuffer,
-        numberOfFrames
-     );
+    reverb->mix = reverbMix;
+    filter->frequency = filterFrequency;
+
+    // Then pass the stereoInputBuffer into a Volume utility
+    Superpowered::Volume(stereoInputBuffer, stereoInputBuffer, previousInputGain, inputGain, numberOfFrames);
+    previousInputGain = inputGain;
     
     // Apply reverb to input (in-place)
     reverb->process(stereoInputBuffer, stereoInputBuffer, numberOfFrames);

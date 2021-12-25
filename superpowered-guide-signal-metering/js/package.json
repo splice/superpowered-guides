@@ -1,0 +1,13 @@
+{
+  "name": "superpowered-guide-signal-metering-js",
+  "version": "1.0.0",
+  "description": "A vanilla JS Superpowered project that demonstrates how to read and render audio signal analysis",
+  "main": "src/index.html",
+  "scripts": {
+    "dev": "http-server -c-1"
+  },
+  "devDependencies": {
+    "http-server": "^14.0.0"
+  },
+  "keywords": []
+}

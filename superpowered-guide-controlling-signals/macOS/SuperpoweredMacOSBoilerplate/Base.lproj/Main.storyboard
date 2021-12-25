@@ -717,6 +717,11 @@
                                     <rect key="frame" x="0.0" y="0.0" width="450" height="404"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
+                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5Eg-ph-MTt">
+                                            <rect key="frame" x="-662" y="-360" width="1114" height="1114"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="BG" id="Qfh-xO-trz"/>
+                                        </imageView>
                                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ljB-M2-U04">
                                             <rect key="frame" x="112" y="342" width="226" height="62"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -741,9 +746,9 @@
                                                     <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IF2-v6-EIb">
                                                         <rect key="frame" x="58" y="19" width="218" height="28"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="4000" doubleValue="660" tickMarkPosition="above" sliderType="linear" id="3lj-Ck-YWr"/>
+                                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1000" doubleValue="220" tickMarkPosition="above" sliderType="linear" id="3lj-Ck-YWr"/>
                                                         <connections>
-                                                            <action selector="paramChanged:" target="XfG-lQ-9wD" id="dqD-Oo-JLP"/>
+                                                            <action selector="paramChanged:" target="XfG-lQ-9wD" id="YC8-9s-z08"/>
                                                         </connections>
                                                     </slider>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MXY-p7-yK8">
@@ -770,12 +775,12 @@
                                         </box>
                                     </subviews>
                                 </view>
-                                <color key="fillColor" red="0.33074790240000002" green="0.59734433890000005" blue="0.78434401750000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="fillColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </box>
                             <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3sb-8g-IC3">
                                 <rect key="frame" x="120" y="181" width="218" height="28"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <sliderCell key="cell" continuous="YES" alignment="left" maxValue="4000" doubleValue="220" tickMarkPosition="above" sliderType="linear" id="mEQ-ak-nDm"/>
+                                <sliderCell key="cell" continuous="YES" alignment="left" maxValue="1000" doubleValue="110" tickMarkPosition="above" sliderType="linear" id="mEQ-ak-nDm"/>
                                 <connections>
                                     <action selector="paramChanged:" target="XfG-lQ-9wD" id="745-Do-9Ah"/>
                                 </connections>
@@ -845,7 +850,7 @@
                                 <rect key="frame" x="266" y="131" width="72" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="0.5" id="vm6-zh-mK1">
-                                    <font key="font" metaFont="system" size="12"/>
+                                    <font key="font" metaFont="cellTitle"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -857,7 +862,7 @@
                         <outlet property="gen1FrequencyLabel" destination="rbF-ZV-dCo" id="7RO-Av-6y3"/>
                         <outlet property="gen1Gain" destination="ffD-RA-scr" id="efU-FU-bCB"/>
                         <outlet property="gen1GainLabel" destination="H5k-6m-we0" id="ZDR-w6-uXD"/>
-                        <outlet property="gen2Frequency" destination="IF2-v6-EIb" id="kT9-xN-GLG"/>
+                        <outlet property="gen2Frequency" destination="IF2-v6-EIb" id="n0x-HE-oQO"/>
                         <outlet property="gen2FrequencyLabel" destination="MXY-p7-yK8" id="Da0-Xh-d1x"/>
                         <outlet property="gen2Gain" destination="rcM-qW-eVe" id="Qs9-Je-6JC"/>
                         <outlet property="gen2GainLabel" destination="eyh-Rf-RVk" id="fOC-gU-g49"/>
@@ -869,6 +874,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="BG" width="1440" height="560"/>
         <image name="Logo" width="178" height="26"/>
     </resources>
 </document>
