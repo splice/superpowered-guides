@@ -57,15 +57,12 @@ class PlayerProcessor extends SuperpoweredWebAudio.AudioWorkletProcessor {
   }
 
   processAudio(inputBuffer, outputBuffer, buffersize, parameters) {
-    if (
-      !this.sampleLoaded ||
-      !this.player.processStereo(
-        outputBuffer.pointer,
-        false,
-        buffersize,
-        this.playerGain
-      )
-    ) {
+    // Ensure the samplerate is in sync on every audio processing callback
+    this.player.outputSamplerate = this.samplerate;
+
+    // Render the output buffers
+
+    if (!this.player.processStereo(outputBuffer.pointer,false,buffersize,this.playerGain)) {
       for (let n = 0; n < buffersize * 2; n++) outputBuffer.array[n] = 0;
     }
   }

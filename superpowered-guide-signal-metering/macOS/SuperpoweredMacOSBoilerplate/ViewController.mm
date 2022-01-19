@@ -82,6 +82,12 @@
 
 - (bool)audioProcessingCallback:(float **)inputBuffers inputChannels:(unsigned int)inputChannels outputBuffers:(float **)outputBuffers outputChannels:(unsigned int)outputChannels numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
     
+    // Ensure the samplerate is in sync on every audio processing callback
+    reverb->samplerate = samplerate;
+    filter->samplerate = samplerate;
+
+    // Render the output buffers
+
     reverb->mix = reverbMix;
     filter->frequency = filterFrequency;
     

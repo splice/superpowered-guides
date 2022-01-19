@@ -54,7 +54,14 @@ class EffectsProcessor extends SuperpoweredWebAudio.AudioWorkletProcessor {
   }
 
   processAudio(inputBuffer, outputBuffer, buffersize, parameters) {
-    // First lets apply the input gain to the user input (supplied from the AudioWorkletProcessorNode input), via a volume function.
+
+    // Ensure the samplerate is in sync on every audio processing callback
+    this.filter.samplerate = this.samplerate;
+    this.reverb.samplerate = this.samplerate;
+
+    // Render the output buffers
+
+    // Apply the input gain to the user input (supplied from the AudioWorkletProcessorNode input), via a volume function.
     this.Superpowered.Volume(
       inputBuffer.pointer,
       inputBuffer.pointer,

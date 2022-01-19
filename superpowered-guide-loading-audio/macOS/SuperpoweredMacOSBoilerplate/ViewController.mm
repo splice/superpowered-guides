@@ -74,6 +74,11 @@
 
 - (bool)audioProcessingCallback:(float **)inputBuffers inputChannels:(unsigned int)inputChannels outputBuffers:(float **)outputBuffers outputChannels:(unsigned int)outputChannels numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
   
+    // Ensure the samplerate is in sync on every audio processing callback
+    playerA->samplerate = samplerate;
+    playerB->samplerate = samplerate;
+
+        // Render the output buffers
     // Our output buffer (which we'll convert later)
     float outputBuffer[numberOfFrames * 2];
   

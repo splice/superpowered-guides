@@ -51,6 +51,13 @@ class ControllingSignalsProcessor extends SuperpoweredWebAudio.AudioWorkletProce
   }
 
   processAudio(inputBuffer, outputBuffer, buffersize, parameters) {
+
+    // Ensure the samplerate is in sync on every audio processing callback
+    this.generator1.samplerate = this.samplerate;
+    this.generator2.samplerate = this.samplerate;
+
+    // Render the output buffers
+
     // generate the first signal
     this.generator1.generate(
       this.gen1OutputBuffer.pointer, // output, // Pointer to floating point numbers. 32-bit MONO output.

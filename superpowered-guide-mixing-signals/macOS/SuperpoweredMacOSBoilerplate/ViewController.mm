@@ -64,7 +64,12 @@
 }
 
 - (bool)audioProcessingCallback:(float **)inputBuffers inputChannels:(unsigned int)inputChannels outputBuffers:(float **)outputBuffers outputChannels:(unsigned int)outputChannels numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
-    
+    // Ensure the samplerate is in sync on every audio processing callback
+    generator1->samplerate = samplerate;
+    generator2->samplerate = samplerate;
+
+    // Render the output buffers
+
     // First we create two buffers to store th output of the two generators before summing
     float gen1OutputBuffer[numberOfFrames];
     float gen2OutputBuffer[numberOfFrames];

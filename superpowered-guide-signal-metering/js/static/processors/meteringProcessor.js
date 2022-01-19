@@ -58,6 +58,13 @@ class MeteringProcessor extends SuperpoweredWebAudio.AudioWorkletProcessor {
   }
 
   processAudio(inputBuffer, outputBuffer, buffersize, parameters) {
+
+    // Ensure the samplerate is in sync on every audio processing callback
+    this.inputFilter.samplerate = this.samplerate;
+    this.reverb.samplerate = this.samplerate;
+
+    // Render the output buffers
+
     //pass the raw user singal through the analyzer
     this.inputPeakValue = this.Superpowered.Peak(
       inputBuffer, // Pointer to floating point numbers. 32-bit interleaved stereo input.

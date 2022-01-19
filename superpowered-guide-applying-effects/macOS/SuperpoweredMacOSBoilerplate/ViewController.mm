@@ -72,6 +72,12 @@
 
 - (bool)audioProcessingCallback:(float **)inputBuffers inputChannels:(unsigned int)inputChannels outputBuffers:(float **)outputBuffers outputChannels:(unsigned int)outputChannels numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
     
+    // Ensure the samplerate is in sync on every audio processing callback
+    reverb->samplerate = samplerate;
+    filter->samplerate = samplerate;
+
+    // Render the output buffers
+
     // First we'll define an output buffer for our stereo input singal to be output to
     float stereoInputBuffer[numberOfFrames * 2];
 

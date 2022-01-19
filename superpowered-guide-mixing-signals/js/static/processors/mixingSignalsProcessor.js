@@ -50,6 +50,13 @@ class MixingSignalsProcessor extends SuperpoweredWebAudio.AudioWorkletProcessor 
   }
 
   processAudio(inputBuffer, outputBuffer, buffersize, parameters) {
+
+    // Ensure the samplerate is in sync on every audio processing callback
+    this.generator1.samplerate = this.samplerate;
+    this.generator2.samplerate = this.samplerate;
+
+    // Render the output buffers
+
     // Generate the next buffer of the first generator
     // Point the output the holding buffer we made in onReady
     this.generator1.generate(
