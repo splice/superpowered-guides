@@ -28,14 +28,7 @@
 
     // First we intialise the Superpowered library
     Superpowered::Initialize(
-     "ExampleLicenseKey-WillExpire-OnNextUpdate",
-     false, // enableAudioAnalysis (using SuperpoweredAnalyzer, SuperpoweredLiveAnalyzer, SuperpoweredWaveform or SuperpoweredBandpassFilterbank)
-     false, // enableFFTAndFrequencyDomain (using SuperpoweredFrequencyDomain, SuperpoweredFFTComplex, SuperpoweredFFTReal or SuperpoweredPolarFFT)
-     false, // enableAudioTimeStretching (using SuperpoweredTimeStretching)
-     true, // enableAudioEffects (using any SuperpoweredFX class)
-     false, // enableAudioPlayerAndDecoder (using SuperpoweredAdvancedAudioPlayer or SuperpoweredDecoder)
-     false, // enableCryptographics (using Superpowered::RSAPublicKey, Superpowered::RSAPrivateKey, Superpowered::hasher or Superpowered::AES)
-     false  // enableNetworking (using Superpowered::httpRequest)
+     "ExampleLicenseKey-WillExpire-OnNextUpdate"
     );
 
     
@@ -63,7 +56,8 @@
     [self.superpowered start];
 }
 
-- (bool)audioProcessingCallback:(float **)inputBuffers inputChannels:(unsigned int)inputChannels outputBuffers:(float **)outputBuffers outputChannels:(unsigned int)outputChannels numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
+- (bool)audioProcessingCallback:(float *)inputBuffer outputBuffer:(float *)outputBuffer numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime
+{
     // Ensure the samplerate is in sync on every audio processing callback
     generator1->samplerate = samplerate;
     generator2->samplerate = samplerate;
@@ -78,20 +72,22 @@
     generator1->generate(gen1OutputBuffer, numberOfFrames);
     generator2->generate(gen2OutputBuffer, numberOfFrames);
     
+    float monoMixerOutputBuffer[numberOfFrames];
     // The mono signals are then passed into the MonoMixer's first two channels. THe remainign channels are NULLEd out.
     monoMixer->process(
        gen1OutputBuffer, // Channel 1 - Generator 1 signal
        gen2OutputBuffer, // Channel 2 - Generator 2 signal
        NULL, // Channel 3 - unused
        NULL, // Channel 4 - unused
-       outputBuffers[0], // Output
+       monoMixerOutputBuffer, // Output
        numberOfFrames
     );
     
-    // We need to copy the left channel to the right channel to make the stereo signal required for output
-    memcpy(outputBuffers[1], outputBuffers[0], sizeof(float) * numberOfFrames);
-    
+    // Interleave the mono signal for the interleaved outputBuffer
+    Superpowered::Interleave(monoMixerOutputBuffer, monoMixerOutputBuffer, outputBuffer, numberOfFrames);
+   
     return true;
 }
+
 
 @end

@@ -27,14 +27,7 @@
     [super viewDidLoad];
 
     Superpowered::Initialize(
-     "ExampleLicenseKey-WillExpire-OnNextUpdate",
-     false, // enableAudioAnalysis (using SuperpoweredAnalyzer, SuperpoweredLiveAnalyzer, SuperpoweredWaveform or SuperpoweredBandpassFilterbank)
-     false, // enableFFTAndFrequencyDomain (using SuperpoweredFrequencyDomain, SuperpoweredFFTComplex, SuperpoweredFFTReal or SuperpoweredPolarFFT)
-     false, // enableAudioTimeStretching (using SuperpoweredTimeStretching)
-     true, // enableAudioEffects (using any SuperpoweredFX class)
-     true, // enableAudioPlayerAndDecoder (using SuperpoweredAdvancedAudioPlayer or SuperpoweredDecoder)
-     false, // enableCryptographics (using Superpowered::RSAPublicKey, Superpowered::RSAPrivateKey, Superpowered::hasher or Superpowered::AES)
-     false  // enableNetworking (using Superpowered::httpRequest)
+     "ExampleLicenseKey-WillExpire-OnNextUpdate"
     );
 
     // Do any additional setup after loading the view.
@@ -52,6 +45,22 @@
         inputGain = self.inputGainSlider.floatValue;
 }
 
+- (bool)audioProcessingCallback:(float *)inputBuffer outputBuffer:(float *)outputBuffer numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime; {
+    
+    // Seperate the left channel from the interleaved inputBuffer
+    float monoInputBuffer[numberOfFrames];
+    Superpowered::CopyMonoFromInterleaved(inputBuffer, 2, monoInputBuffer, 0, numberOfFrames);
+    
+    // Interleave the single channel monoInputBuffer to the interleaved outputBuffer
+    Superpowered::Interleave(monoInputBuffer, monoInputBuffer, outputBuffer, numberOfFrames);
+    
+    // Apply volume transformation
+    Superpowered::Volume(outputBuffer, outputBuffer, inputGain, previousInputGain, numberOfFrames);
+    previousInputGain = inputGain;
+    
+    return true;
+}
+
 - (bool)audioProcessingCallback:(float **)inputBuffers inputChannels:(unsigned int)inputChannels outputBuffers:(float **)outputBuffers outputChannels:(unsigned int)outputChannels numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
     
     float outputBuffer[numberOfFrames * 2];
@@ -65,6 +74,7 @@
     
     return true;
 }
+
 - (IBAction)parmChanged:(id)sender {
     [self setVariables];
 }

@@ -46,14 +46,7 @@
     NSLog(@"Superpowered version: %u", Superpowered::Version());
 
     Superpowered::Initialize(
-     "ExampleLicenseKey-WillExpire-OnNextUpdate",
-     false, // enableAudioAnalysis (using SuperpoweredAnalyzer, SuperpoweredLiveAnalyzer, SuperpoweredWaveform or SuperpoweredBandpassFilterbank)
-     false, // enableFFTAndFrequencyDomain (using SuperpoweredFrequencyDomain, SuperpoweredFFTComplex, SuperpoweredFFTReal or SuperpoweredPolarFFT)
-     false, // enableAudioTimeStretching (using SuperpoweredTimeStretching)
-     true, // enableAudioEffects (using any SuperpoweredFX class)
-     false, // enableAudioPlayerAndDecoder (using SuperpoweredAdvancedAudioPlayer or SuperpoweredDecoder)
-     false, // enableCryptographics (using Superpowered::RSAPublicKey, Superpowered::RSAPrivateKey, Superpowered::hasher or Superpowered::AES)
-     false  // enableNetworking (using Superpowered::httpRequest)
+     "ExampleLicenseKey-WillExpire-OnNextUpdate"
     );
 
     generator1 = new Superpowered::Generator(44100, Superpowered::Generator::Sine);
@@ -79,8 +72,7 @@
         self.gen2GainLabel.stringValue = [NSString stringWithFormat:@"%.2f", self.gen2Gain.floatValue];
 }
 
-
-- (bool)audioProcessingCallback:(float **)inputBuffers inputChannels:(unsigned int)inputChannels outputBuffers:(float **)outputBuffers outputChannels:(unsigned int)outputChannels numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
+- (bool)audioProcessingCallback:(float *)inputBuffer outputBuffer:(float *)outputBuffer numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime; {
     
     // Ensure the samplerate is in sync on every audio processing callback
     generator1->samplerate = samplerate;
@@ -99,19 +91,23 @@
     generator1->generate(gen1OutputBuffer, numberOfFrames);
     generator2->generate(gen2OutputBuffer, numberOfFrames);
     
+    // create mono buffer for mono mixer output
+    float monoBuffer[numberOfFrames];
+    
     monoMixer->process(
        gen1OutputBuffer,
        gen2OutputBuffer,
        NULL,
        NULL,
-       outputBuffers[0],
+       monoBuffer,
        numberOfFrames
     );
     
-    memcpy(outputBuffers[1], outputBuffers[0], sizeof(float) * numberOfFrames); // copy left mono channel to right
+    // Interleave mono buffer to stereo output
+    Superpowered::Interleave(monoBuffer, monoBuffer, outputBuffer, numberOfFrames);
+
     return true;
 }
-
 
 - (IBAction)paramChanged:(id)sender {
     [self setVariables];

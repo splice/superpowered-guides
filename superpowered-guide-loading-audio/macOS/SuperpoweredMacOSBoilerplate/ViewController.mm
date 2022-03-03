@@ -32,14 +32,7 @@
     [super viewDidLoad];
 
     Superpowered::Initialize(
-     "ExampleLicenseKey-WillExpire-OnNextUpdate",
-     true, // enableAudioAnalysis (using SuperpoweredAnalyzer, SuperpoweredLiveAnalyzer, SuperpoweredWaveform or SuperpoweredBandpassFilterbank)
-     true, // enableFFTAndFrequencyDomain (using SuperpoweredFrequencyDomain, SuperpoweredFFTComplex, SuperpoweredFFTReal or SuperpoweredPolarFFT)
-     true, // enableAudioTimeStretching (using SuperpoweredTimeStretching)
-     true, // enableAudioEffects (using any SuperpoweredFX class)
-     true, // enableAudioPlayerAndDecoder (using SuperpoweredAdvancedAudioPlayer or SuperpoweredDecoder)
-     false, // enableCryptographics (using Superpowered::RSAPublicKey, Superpowered::RSAPrivateKey, Superpowered::hasher or Superpowered::AES)
-     false  // enableNetworking (using Superpowered::httpRequest)
+     "ExampleLicenseKey-WillExpire-OnNextUpdate"
     );
     NSLog(@"Superpowered version: %u", Superpowered::Version());
     
@@ -72,15 +65,12 @@
     [self.superpowered start];
 }
 
-- (bool)audioProcessingCallback:(float **)inputBuffers inputChannels:(unsigned int)inputChannels outputBuffers:(float **)outputBuffers outputChannels:(unsigned int)outputChannels numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
-  
-    // Ensure the samplerate is in sync on every audio processing callback
-    playerA->samplerate = samplerate;
-    playerB->samplerate = samplerate;
 
-        // Render the output buffers
-    // Our output buffer (which we'll convert later)
-    float outputBuffer[numberOfFrames * 2];
+- (bool)audioProcessingCallback:(float *)inputBuffer outputBuffer:(float *)outputBuffer numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
+    
+    // Ensure the samplerate is in sync on every audio processing callback
+    playerA->outputSamplerate = samplerate;
+    playerB->outputSamplerate = samplerate;
   
     // Set the playback rate of the PlayerA to current atomic variable value
     playerA->playbackRate = localPlaybackRateValue;
@@ -98,9 +88,7 @@
     // If silence, then write player B to the output buffer
     // If no silence, set the mix parameter of playerB's processStereo to true to mix its output into playerA's output
     if (playerB->processStereo(outputBuffer, !silence, numberOfFrames, remoteGainValue)) silence = false;
-    
-    // The output buffer is ready now, let's put the finished audio into the left and right outputs.
-    if (!silence) Superpowered::DeInterleave(outputBuffer, outputBuffers[0], outputBuffers[1], numberOfFrames);
+
     return !silence;
 }
 

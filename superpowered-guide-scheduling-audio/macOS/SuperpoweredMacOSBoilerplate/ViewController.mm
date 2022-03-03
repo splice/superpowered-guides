@@ -31,14 +31,7 @@
     [super viewDidLoad];
 
     Superpowered::Initialize(
-     "ExampleLicenseKey-WillExpire-OnNextUpdate",
-     false, // enableAudioAnalysis (using SuperpoweredAnalyzer, SuperpoweredLiveAnalyzer, SuperpoweredWaveform or SuperpoweredBandpassFilterbank)
-     false, // enableFFTAndFrequencyDomain (using SuperpoweredFrequencyDomain, SuperpoweredFFTComplex, SuperpoweredFFTReal or SuperpoweredPolarFFT)
-     false, // enableAudioTimeStretching (using SuperpoweredTimeStretching)
-     true, // enableAudioEffects (using any SuperpoweredFX class)
-     true, // enableAudioPlayerAndDecoder (using SuperpoweredAdvancedAudioPlayer or SuperpoweredDecoder)
-     false, // enableCryptographics (using Superpowered::RSAPublicKey, Superpowered::RSAPrivateKey, Superpowered::hasher or Superpowered::AES)
-     false  // enableNetworking (using Superpowered::httpRequest)
+     "ExampleLicenseKey-WillExpire-OnNextUpdate"
     );
 
     // Do any additional setup after loading the view.
@@ -83,20 +76,20 @@
     NSLog(@"mouse up");
 }
 
-- (bool)audioProcessingCallback:(float **)inputBuffers inputChannels:(unsigned int)inputChannels outputBuffers:(float **)outputBuffers outputChannels:(unsigned int)outputChannels numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
+- (bool)audioProcessingCallback:(float *)inputBuffer outputBuffer:(float *)outputBuffer numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
     
     // Ensure the samplerate is in sync on every audio processing callback
     generator->samplerate = samplerate;
 
     // Render the output buffers
 
-    float outputBuffer[numberOfFrames * 2];
+    float monoBuffer[numberOfFrames];
     
     // Generate the full volume sine tone mono signal
-    generator->generate(outputBuffers[0], numberOfFrames);
+    generator->generate(monoBuffer, numberOfFrames);
     
     // Create a stereo interlaved buffer which we can pass into the Volume utility
-    Superpowered::Interleave(outputBuffers[0], outputBuffers[0], outputBuffer, numberOfFrames);
+    Superpowered::Interleave(monoBuffer, monoBuffer, outputBuffer, numberOfFrames);
     
     // Here we apply genPreviousVolume as the start of the volume ramp
     // and genVolume as the destination of the ramp
@@ -110,9 +103,6 @@
     );
     // here we store the latest volume value which is used in the next process loop call.
     genPreviousVolume = genVolume;
-    
-    //We then convert the interleaved stereo format back into the format required by the OS
-    Superpowered::DeInterleave(outputBuffer, outputBuffers[0], outputBuffers[1], numberOfFrames);
 
     return true;
 }

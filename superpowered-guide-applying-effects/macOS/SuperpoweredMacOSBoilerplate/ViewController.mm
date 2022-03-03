@@ -33,14 +33,7 @@
     [super viewDidLoad];
 
     Superpowered::Initialize(
-     "ExampleLicenseKey-WillExpire-OnNextUpdate",
-     true, // enableAudioAnalysis (using SuperpoweredAnalyzer, SuperpoweredLiveAnalyzer, SuperpoweredWaveform or SuperpoweredBandpassFilterbank)
-     true, // enableFFTAndFrequencyDomain (using SuperpoweredFrequencyDomain, SuperpoweredFFTComplex, SuperpoweredFFTReal or SuperpoweredPolarFFT)
-     true, // enableAudioTimeStretching (using SuperpoweredTimeStretching)
-     true, // enableAudioEffects (using any SuperpoweredFX class)
-     true, // enableAudioPlayerAndDecoder (using SuperpoweredAdvancedAudioPlayer or SuperpoweredDecoder)
-     false, // enableCryptographics (using Superpowered::RSAPublicKey, Superpowered::RSAPrivateKey, Superpowered::hasher or Superpowered::AES)
-     false  // enableNetworking (using Superpowered::httpRequest)
+     "ExampleLicenseKey-WillExpire-OnNextUpdate"
     );
 
     // Do any additional setup after loading the view.
@@ -70,36 +63,36 @@
     reverbMix = self.reverbMixSlider.floatValue;
 }
 
-- (bool)audioProcessingCallback:(float **)inputBuffers inputChannels:(unsigned int)inputChannels outputBuffers:(float **)outputBuffers outputChannels:(unsigned int)outputChannels numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
+
+- (bool)audioProcessingCallback:(float *)inputBuffer outputBuffer:(float *)outputBuffer numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
+    
     
     // Ensure the samplerate is in sync on every audio processing callback
     reverb->samplerate = samplerate;
     filter->samplerate = samplerate;
+    
 
-    // Render the output buffers
-
-    // First we'll define an output buffer for our stereo input singal to be output to
-    float stereoInputBuffer[numberOfFrames * 2];
-
-    // THen we create that streo signal from the mono input signal
-    Superpowered::Interleave(inputBuffers[0], inputBuffers[0], stereoInputBuffer, numberOfFrames);
+    // Seperate the left channel from the interleaved inputBuffer
+    float monoInputBuffer[numberOfFrames];
+    Superpowered::CopyMonoFromInterleaved(inputBuffer, 2, monoInputBuffer, 0, numberOfFrames);
+        
+    // Interleave the single channel monoInputBuffer to the interleaved outputBuffer
+    Superpowered::Interleave(monoInputBuffer, monoInputBuffer, outputBuffer, numberOfFrames);
 
     // We then apply the current values to the classes
-    
+
     reverb->mix = reverbMix;
     filter->frequency = filterFrequency;
 
     // Then pass the stereoInputBuffer into a Volume utility
-    Superpowered::Volume(stereoInputBuffer, stereoInputBuffer, previousInputGain, inputGain, numberOfFrames);
+    Superpowered::Volume(outputBuffer, outputBuffer, previousInputGain, inputGain, numberOfFrames);
     previousInputGain = inputGain;
     
     // Apply reverb to input (in-place)
-    reverb->process(stereoInputBuffer, stereoInputBuffer, numberOfFrames);
+    reverb->process(outputBuffer, outputBuffer, numberOfFrames);
      
     // Apply the filter (in-place)
-    filter->process(stereoInputBuffer, stereoInputBuffer, numberOfFrames);
-
-    Superpowered::DeInterleave(stereoInputBuffer, outputBuffers[0], outputBuffers[1], numberOfFrames);
+    filter->process(outputBuffer, outputBuffer, numberOfFrames);
 
     return true;
 }

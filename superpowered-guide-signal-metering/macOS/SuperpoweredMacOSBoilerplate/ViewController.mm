@@ -43,14 +43,7 @@
     [super viewDidLoad];
    
     Superpowered::Initialize(
-     "ExampleLicenseKey-WillExpire-OnNextUpdate",
-     true, // enableAudioAnalysis (using SuperpoweredAnalyzer, SuperpoweredLiveAnalyzer, SuperpoweredWaveform or SuperpoweredBandpassFilterbank)
-     true, // enableFFTAndFrequencyDomain (using SuperpoweredFrequencyDomain, SuperpoweredFFTComplex, SuperpoweredFFTReal or SuperpoweredPolarFFT)
-     true, // enableAudioTimeStretching (using SuperpoweredTimeStretching)
-     true, // enableAudioEffects (using any SuperpoweredFX class)
-     true, // enableAudioPlayerAndDecoder (using SuperpoweredAdvancedAudioPlayer or SuperpoweredDecoder)
-     false, // enableCryptographics (using Superpowered::RSAPublicKey, Superpowered::RSAPrivateKey, Superpowered::hasher or Superpowered::AES)
-     false  // enableNetworking (using Superpowered::httpRequest)
+     "ExampleLicenseKey-WillExpire-OnNextUpdate"
     );
 
     // Do any additional setup after loading the view.
@@ -80,7 +73,14 @@
     reverbMix = self.reverbMixSlider.floatValue;
 }
 
-- (bool)audioProcessingCallback:(float **)inputBuffers inputChannels:(unsigned int)inputChannels outputBuffers:(float **)outputBuffers outputChannels:(unsigned int)outputChannels numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
+- (bool)audioProcessingCallback:(float *)inputBuffer outputBuffer:(float *)outputBuffer numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
+    
+    // Seperate the left channel from the interleaved inputBuffer
+    float monoInputBuffer[numberOfFrames];
+    Superpowered::CopyMonoFromInterleaved(inputBuffer, 2, monoInputBuffer, 0, numberOfFrames);
+    
+    // Interleave the single channel monoInputBuffer to the interleaved outputBuffer
+    Superpowered::Interleave(monoInputBuffer, monoInputBuffer, outputBuffer, numberOfFrames);
     
     // Ensure the samplerate is in sync on every audio processing callback
     reverb->samplerate = samplerate;
@@ -91,10 +91,6 @@
     reverb->mix = reverbMix;
     filter->frequency = filterFrequency;
     
-    float outputBuffer[numberOfFrames * 2];
-    
-    
-    Superpowered::Interleave(inputBuffers[0], inputBuffers[0], outputBuffer, numberOfFrames);
     
     inputPeak = (double) Superpowered::Peak(outputBuffer, numberOfFrames);
     
@@ -109,11 +105,10 @@
     filter->process(outputBuffer, outputBuffer, numberOfFrames);
     
     outputPeak = (double) Superpowered::Peak(outputBuffer, numberOfFrames);
-    
-    Superpowered::DeInterleave(outputBuffer, outputBuffers[0], outputBuffers[1], numberOfFrames);
 
     return true;
 }
+
 - (IBAction)parmChanged:(id)sender {
     [self setVariables];
 }
