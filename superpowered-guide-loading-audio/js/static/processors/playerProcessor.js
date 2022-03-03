@@ -63,7 +63,8 @@ class PlayerProcessor extends SuperpoweredWebAudio.AudioWorkletProcessor {
     // Render the output buffers
 
     if (!this.player.processStereo(outputBuffer.pointer,false,buffersize,this.playerGain)) {
-      for (let n = 0; n < buffersize * 2; n++) outputBuffer.array[n] = 0;
+      //If no player output, set output to 0s
+      this.Superpowered.memorySet(outputBuffer.pointer, 0, buffersize * 8); // 8 bytes for each frame (1 channel is 4 bytes)
     }
   }
 }

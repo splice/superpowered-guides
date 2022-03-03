@@ -1,21 +1,25 @@
-import  {SuperpoweredGlue}  from './SuperpoweredGlueModule.js';
+import { SuperpoweredGlue } from './SuperpoweredGlueModule.js';
 import { SuperpoweredTrackLoader } from './SuperpoweredTrackLoaderModule.js';
 
 var AudioWorkletHasBrokenModuleImplementation = false;
 
 class SuperpoweredWebAudio {
-    constructor(minimumSamplerate, superpowered) { 
+    constructor(minimumSamplerate, superpowered) {
+        console.log('constructing');
         AudioWorkletHasBrokenModuleImplementation = (navigator.userAgent.indexOf('AppleWebKit') > -1) || (navigator.userAgent.indexOf('Firefox') > -1);
         if (AudioWorkletHasBrokenModuleImplementation && (navigator.userAgent.indexOf('Chrome') > -1)) AudioWorkletHasBrokenModuleImplementation = false;
         this.Superpowered = superpowered;
         this.audioContext = null;
         let AudioContext = window.AudioContext || window.webkitAudioContext || false;
-        let c = new AudioContext();
-        if (c.sampleRate < minimumSamplerate) {
-            c.close();
-            c = new AudioContext({ sampleRate: minimumSamplerate });
-        }
-        this.audioContext = c;
+        let audioContextOptions = {};
+        
+        // let c = new AudioContext();
+        // if (c.sampleRate < minimumSamplerate) {
+        //     console.log('closing context');
+        //     c.close();
+            
+        // }
+        this.audioContext = new AudioContext({ sampleRate: minimumSamplerate });;
     }
 
     getUserMediaForAudio(constraints, onPermissionGranted, onPermissionDenied) {
@@ -41,7 +45,7 @@ class SuperpoweredWebAudio {
             finalConstraints.audio = { mandatory: { googAutoGainControl: false, googAutoGainControl2: false, googEchoCancellation: false, googNoiseSuppression: false, googHighpassFilter: false, googEchoCancellation2: false, googNoiseSuppression2: false, googDAEchoCancellation: false, googNoiseReduction: false } };
         };
 
-        navigator.getUserMediaMethod = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+        navigator.getUserMediaMethod = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mediaDevices.mozGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
         if (navigator.getUserMediaMethod) navigator.getUserMediaMethod(finalConstraints, onPermissionGranted, onPermissionDenied);
         else {
             let userMedia = null;
@@ -95,6 +99,7 @@ class SuperpoweredWebAudio {
                         });
                     }
                     sendMessageToAudioScope(message, transfer = []) { this.port.postMessage(message, transfer); }
+                    destruct() { this.port.postMessage('___superpowered___destruct___'); }
                 }
 
                 let node = new SuperpoweredNode(this, className);
@@ -108,13 +113,16 @@ class SuperpoweredWebAudio {
                 }.bind(node);
             });
         } else {
-            import(url).then((processorModule) => {
+            import(/* webpackIgnore: true */ url).then((processorModule) => {
                 let node = this.audioContext.createScriptProcessor(1024, 2, 2);
                 node.samplerate = this.audioContext.sampleRate;
                 node.inputBuffer = this.Superpowered.createFloatArray(1024 * 2);
                 node.outputBuffer = this.Superpowered.createFloatArray(1024 * 2);
                 node.processor = new processorModule.default(this.Superpowered, onMessageFromAudioScope, node.samplerate);
                 node.sendMessageToAudioScope = function(message, transfer = 0) { node.processor.onMessageFromMainScope(message); }
+                node.destruct = function() {
+                    node.processor.onDestruct();
+                }
                 node.onaudioprocess = function(e) {
                     node.processor.Superpowered.bufferToWASM(node.inputBuffer, e.inputBuffer);
                     node.processor.processAudio(node.inputBuffer, node.outputBuffer, node.inputBuffer.array.length / 2);
@@ -131,8 +139,13 @@ if (!AudioWorkletHasBrokenModuleImplementation && (typeof AudioWorkletProcessor 
         constructor(options) {
             super();
             SuperpoweredGlue.__uint_max__sp__ = options.processorOptions.maxChannels;
-            this.port.onmessage = (event) => { this.onMessageFromMainScope(event.data); };
-            this.ok = false;
+            this.state = 0;
+            this.port.onmessage = (event) => {
+                if (event.data == '___superpowered___destruct___') {
+                    this.state = -1;
+                    this.onDestruct();
+                } else this.onMessageFromMainScope(event.data);
+            };
             this.samplerate = options.processorOptions.samplerate;
             this.Superpowered = new SuperpoweredGlue();
             this.Superpowered.loadFromArrayBuffer(options.processorOptions.wasmCode, this);
@@ -143,14 +156,16 @@ if (!AudioWorkletHasBrokenModuleImplementation && (typeof AudioWorkletProcessor 
             this.outputBuffer = this.Superpowered.createFloatArray(128 * 2);
             this.onReady();
             this.port.postMessage('___superpowered___onready___');
-            this.ok = true;
+            this.state = 1;
         }
         onReady() {}
+        onDestruct() {}
         onMessageFromMainScope(message) {}
         sendMessageToMainScope(message) { this.port.postMessage(message); }
         processAudio(buffer, parameters) {}
         process(inputs, outputs, parameters) {
-            if (this.ok) {
+            if (this.state < 0) return false;
+            if (this.state == 1) {
                 if (inputs[0].length > 1) this.Superpowered.bufferToWASM(this.inputBuffer, inputs);
                 this.processAudio(this.inputBuffer, this.outputBuffer, this.inputBuffer.array.length / 2, parameters);
                 if (outputs[0].length > 1) this.Superpowered.bufferToJS(this.outputBuffer, outputs);
@@ -170,6 +185,7 @@ if (!AudioWorkletHasBrokenModuleImplementation && (typeof AudioWorkletProcessor 
         }
         onMessageFromAudioScope = null;
         onReady() {}
+        onDestruct() {}
         onMessageFromMainScope(message) {}
         sendMessageToMainScope(message) { if (!this.loader.onmessage({ data: message })) this.onMessageFromAudioScope(message); }
         postMessage(message, transfer = []) { this.onMessageFromMainScope(message); }

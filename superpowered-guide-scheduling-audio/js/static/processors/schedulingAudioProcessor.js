@@ -19,7 +19,6 @@ class SchedulingAudioProcessor extends SuperpoweredWebAudio.AudioWorkletProcesso
 
     // Pass an event object over to the main scope to tell it everything is ready
     this.sendMessageToMainScope({ event: "ready" });
-    console.log('whoop');
   }
 
   // onDestruct is called when the parent AudioWorkletNode.destruct() method is called.

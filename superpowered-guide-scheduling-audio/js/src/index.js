@@ -1,5 +1,4 @@
-import SuperpoweredGlue from "../static/superpowered/SuperpoweredGlueModule.js";
-import { SuperpoweredWebAudio } from "../static/superpowered/SuperpoweredWebAudio.js";
+import { SuperpoweredWebAudio, SuperpoweredGlue } from "../static/superpowered/SuperpoweredWebAudio.js";
 
 const superPoweredWasmLocation = "/static/superpowered/superpowered.wasm";
 // The location of the processor from the browser to fetch
@@ -14,20 +13,14 @@ class DemoApplication {
   }
 
   async startApp() {
-    const superpowered = await SuperpoweredGlue.fetch(superPoweredWasmLocation);
-    superpowered.Initialize({
-      licenseKey: "ExampleLicenseKey-WillExpire-OnNextUpdate",
-      enableAudioAnalysis: true,
-      enableFFTAndFrequencyDomain: true,
-      enableAudioTimeStretching: true,
-      enableAudioEffects: true,
-      enableAudioPlayerAndDecoder: true,
-      enableCryptographics: false,
-      enableNetworking: false
+    this.superpowered = await SuperpoweredGlue.fetch(superPoweredWasmLocation);
+    this.superpowered.Initialize({
+      licenseKey: "ExampleLicenseKey-WillExpire-OnNextUpdate"
     });
+    console.log(`Running Superpowered v${this.superpowered.Version()}`);
     this.webaudioManager = new SuperpoweredWebAudio(
       minimumSampleRate,
-      superpowered
+      this.superpowered
     );
 
     // First define a handler that will be called whenever this.sendMessageToMainScope is called from the AudioWorkletProcessor scope

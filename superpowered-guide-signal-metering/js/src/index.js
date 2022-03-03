@@ -1,5 +1,4 @@
-import SuperpoweredGlue from "../static/superpowered/SuperpoweredGlueModule.js";
-import { SuperpoweredWebAudio } from "../static/superpowered/SuperpoweredWebAudio.js";
+import { SuperpoweredWebAudio, SuperpoweredGlue } from "../static/superpowered/SuperpoweredWebAudio.js";
 
 class DemoApplication {
   constructor() {
@@ -101,20 +100,14 @@ class DemoApplication {
     this.outputCanvasContext.fillStyle = "#1254fe";
 
     // Now create the AudioWorkletNode, passing in the AudioWorkletProcessor url, it's registered name (defined inside the processor) and a callback then gets called when everything is up a ready
-    const superpowered = await SuperpoweredGlue.fetch(superPoweredWasmLocation);
-    superpowered.Initialize({
-      licenseKey: "ExampleLicenseKey-WillExpire-OnNextUpdate",
-      enableAudioAnalysis: true,
-      enableFFTAndFrequencyDomain: true,
-      enableAudioTimeStretching: true,
-      enableAudioEffects: true,
-      enableAudioPlayerAndDecoder: true,
-      enableCryptographics: false,
-      enableNetworking: false
+    this.superpowered = await SuperpoweredGlue.fetch(superPoweredWasmLocation);
+    this.superpowered.Initialize({
+      licenseKey: "ExampleLicenseKey-WillExpire-OnNextUpdate"
     });
+    console.log(`Running Superpowered v${this.superpowered.Version()}`);
     this.webaudioManager = new SuperpoweredWebAudio(
       minimumSampleRate,
-      superpowered
+      this.superpowered
     );
 
     await this.setupAudioCapture();

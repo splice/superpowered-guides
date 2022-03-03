@@ -1,5 +1,4 @@
-import SuperpoweredGlue from "../static/superpowered/SuperpoweredGlueModule.js";
-import { SuperpoweredWebAudio } from "../static/superpowered/SuperpoweredWebAudio.js";
+import { SuperpoweredWebAudio, SuperpoweredGlue } from "../static/superpowered/SuperpoweredWebAudio.js";
 
 // The  location of the superpowered WebAssembly library
 const superPoweredWasmLocation = "/static/superpowered/superpowered.wasm";
@@ -12,12 +11,10 @@ class DemoApplication {
   constructor() {
     this.webaudioManager = null;
     this.userInputMergerNode = null;
-    // this.boot();
   }
 
   async boot() {
     await this.setupSuperpowered();
-    // await this.loadProcessor();
   }
 
   onMessageProcessorAudioScope = (message) => {
@@ -43,15 +40,9 @@ class DemoApplication {
   async setupSuperpowered() {
     this.superpowered = await SuperpoweredGlue.fetch(superPoweredWasmLocation);
     this.superpowered.Initialize({
-      licenseKey: "ExampleLicenseKey-WillExpire-OnNextUpdate",
-      enableAudioAnalysis: true,
-      enableFFTAndFrequencyDomain: true,
-      enableAudioTimeStretching: true,
-      enableAudioEffects: true,
-      enableAudioPlayerAndDecoder: true,
-      enableCryptographics: false,
-      enableNetworking: false
+      licenseKey: "ExampleLicenseKey-WillExpire-OnNextUpdate"
     });
+    console.log(`Running Superpowered v${this.superpowered.Version()}`);
     this.webaudioManager = new SuperpoweredWebAudio(
       minimumSampleRate,
       this.superpowered
@@ -101,7 +92,6 @@ class DemoApplication {
   }
 
   resumeContext() {
-    console.log("resuming");
     this.webaudioManager.audioContext.resume();
   }
 }

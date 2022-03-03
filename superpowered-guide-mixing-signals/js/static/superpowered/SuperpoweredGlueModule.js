@@ -1,4 +1,4 @@
-export class SuperpoweredGlue {
+class SuperpoweredGlue {
     niceSize(bytes) {
         if (bytes == 0) return '0 byte';
         else if (bytes == 1) return '1 byte';
@@ -123,6 +123,7 @@ export class SuperpoweredGlue {
         let strings = [];
         for (let index = arguments.length - 1; index > 0; index--) {
             if (arguments[index].array != undefined) arguments[index] = arguments[index].array.byteOffset;
+            else if (arguments[index].__pointer__ != undefined) arguments[index] = arguments[index].__pointer__;
             else if (typeof arguments[index] == 'string') {
                 arguments[index] = this.__glue__.toWASMString(arguments[index]);
                 strings.push(arguments[index]);
@@ -145,6 +146,7 @@ export class SuperpoweredGlue {
         let strings = [];
         for (let index = arguments.length - 1; index >= 0; index--) {
             if (arguments[index].array != undefined) arguments[index] = arguments[index].array.byteOffset;
+            else if (arguments[index].__pointer__ != undefined) arguments[index] = arguments[index].__pointer__;
             else if (typeof arguments[index] == 'string') {
                 arguments[index] = this.glue.toWASMString(arguments[index]);
                 strings.push(arguments[index]);
@@ -528,4 +530,4 @@ if (typeof exports === 'object' && typeof module === 'object') module.exports = 
 else if (typeof define === 'function' && define['amd']) define([], function() { return SuperpoweredGlue; });
 else if (typeof exports === 'object') exports["SuperpoweredGlue"] = SuperpoweredGlue;
 
-export default SuperpoweredGlue;
+export { SuperpoweredGlue };
