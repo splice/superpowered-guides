@@ -61,20 +61,6 @@
     return true;
 }
 
-- (bool)audioProcessingCallback:(float **)inputBuffers inputChannels:(unsigned int)inputChannels outputBuffers:(float **)outputBuffers outputChannels:(unsigned int)outputChannels numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
-    
-    float outputBuffer[numberOfFrames * 2];
-    
-    Superpowered::Interleave(inputBuffers[0], inputBuffers[0], outputBuffer, numberOfFrames);
-    
-    Superpowered::Volume(outputBuffer, outputBuffer, inputGain, previousInputGain, numberOfFrames);
-    previousInputGain = inputGain;
-    
-    Superpowered::DeInterleave(outputBuffer, outputBuffers[0], outputBuffers[1], numberOfFrames);
-    
-    return true;
-}
-
 - (IBAction)parmChanged:(id)sender {
     [self setVariables];
 }
