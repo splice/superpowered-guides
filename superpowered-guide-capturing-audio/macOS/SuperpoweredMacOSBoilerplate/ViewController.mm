@@ -46,18 +46,9 @@
 }
 
 - (bool)audioProcessingCallback:(float *)inputBuffer outputBuffer:(float *)outputBuffer numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime; {
-    
-    // Seperate the left channel from the interleaved inputBuffer
-    float monoInputBuffer[numberOfFrames];
-    Superpowered::CopyMonoFromInterleaved(inputBuffer, 2, monoInputBuffer, 0, numberOfFrames);
-    
-    // Interleave the single channel monoInputBuffer to the interleaved outputBuffer
-    Superpowered::Interleave(monoInputBuffer, monoInputBuffer, outputBuffer, numberOfFrames);
-    
     // Apply volume transformation
-    Superpowered::Volume(outputBuffer, outputBuffer, inputGain, previousInputGain, numberOfFrames);
+    Superpowered::Volume(inputBuffer, outputBuffer, previousInputGain, inputGain, numberOfFrames);
     previousInputGain = inputGain;
-    
     return true;
 }
 

@@ -66,32 +66,22 @@
 
 - (bool)audioProcessingCallback:(float *)inputBuffer outputBuffer:(float *)outputBuffer numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
     
-    
-    // Ensure the samplerate is in sync on every audio processing callback
+    // Ensure the sample rate is in sync on every audio processing callback.
     reverb->samplerate = samplerate;
     filter->samplerate = samplerate;
-    
 
-    // Seperate the left channel from the interleaved inputBuffer
-    float monoInputBuffer[numberOfFrames];
-    Superpowered::CopyMonoFromInterleaved(inputBuffer, 2, monoInputBuffer, 0, numberOfFrames);
-        
-    // Interleave the single channel monoInputBuffer to the interleaved outputBuffer
-    Superpowered::Interleave(monoInputBuffer, monoInputBuffer, outputBuffer, numberOfFrames);
-
-    // We then apply the current values to the classes
-
+    // Apply the current values to the classes.
     reverb->mix = reverbMix;
     filter->frequency = filterFrequency;
 
-    // Then pass the stereoInputBuffer into a Volume utility
-    Superpowered::Volume(outputBuffer, outputBuffer, previousInputGain, inputGain, numberOfFrames);
+    // Apply volume while copy the input buffer to the output buffer.
+    Superpowered::Volume(inputBuffer, outputBuffer, previousInputGain, inputGain, numberOfFrames);
     previousInputGain = inputGain;
-    
-    // Apply reverb to input (in-place)
+
+    // Apply reverb to output (in-place).
     reverb->process(outputBuffer, outputBuffer, numberOfFrames);
-     
-    // Apply the filter (in-place)
+
+    // Apply the filter (in-place).
     filter->process(outputBuffer, outputBuffer, numberOfFrames);
 
     return true;
