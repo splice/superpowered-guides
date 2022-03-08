@@ -787,7 +787,7 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="0.40000000000000002" tickMarkPosition="above" sliderType="linear" id="isa-GM-OvN"/>
                                             <connections>
-                                                <action selector="parmChanged:" target="XfG-lQ-9wD" id="PAk-qX-nKc"/>
+                                                <action selector="paramChanged:" target="XfG-lQ-9wD" id="PAk-qX-nKc"/>
                                             </connections>
                                         </slider>
                                         <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OUf-Is-NaQ">
@@ -795,7 +795,7 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="0.57989998750908434" tickMarkPosition="above" sliderType="linear" id="VKY-a2-ObU"/>
                                             <connections>
-                                                <action selector="parmChanged:" target="XfG-lQ-9wD" id="JRa-OM-JVI"/>
+                                                <action selector="paramChanged:" target="XfG-lQ-9wD" id="JRa-OM-JVI"/>
                                             </connections>
                                         </slider>
                                         <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wyW-Tl-j5u">
@@ -803,7 +803,7 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <sliderCell key="cell" continuous="YES" state="on" alignment="left" minValue="20" maxValue="4000" doubleValue="2000" tickMarkPosition="above" sliderType="linear" id="9sF-Pv-Wtu"/>
                                             <connections>
-                                                <action selector="parmChanged:" target="XfG-lQ-9wD" id="YLi-gy-7kR"/>
+                                                <action selector="paramChanged:" target="XfG-lQ-9wD" id="YLi-gy-7kR"/>
                                             </connections>
                                         </slider>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FEY-Wn-AP4">

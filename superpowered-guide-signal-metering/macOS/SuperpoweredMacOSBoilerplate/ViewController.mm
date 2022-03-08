@@ -1,105 +1,97 @@
-//
-//  ViewController.m
-//  SuperpoweredGuideCapturingAudio
-//
-//  Created by Balázs Kiss and Thomas Dodds on 2021. 10. 21..
-//
-
 #import "ViewController.h"
 #import "Superpowered.h"
 #import "SuperpoweredSimple.h"
 #import "SuperpoweredOSXAudioIO.h"
 #import "SuperpoweredFilter.h"
 #import "SuperpoweredReverb.h"
-#import "SuperpoweredMixer.h"
-#import <atomic>
 
 @interface ViewController ()
-@property (nonatomic, strong) SuperpoweredOSXAudioIO *superpowered;
 @property (weak) IBOutlet NSSlider *inputGainSlider;
 @property (weak) IBOutlet NSSlider *reverbMixSlider;
 @property (weak) IBOutlet NSSlider *filterFrequencySlider;
 @property (weak) IBOutlet NSLevelIndicator *inputLevelMeter;
 @property (weak) IBOutlet NSLevelIndicator *outputLevelMeter;
-@property (strong) NSTimer *timer;
 @end
 
-
-
 @implementation ViewController {
+    SuperpoweredOSXAudioIO *audioIO;
     Superpowered::Filter *filter;
     Superpowered::Reverb *reverb;
-    float inputGain, previousInputGain, reverbMix, filterFrequency;
-    float inputPeak, outputPeak;
-    
-}
-
-- (void)animate {
-    [self.inputLevelMeter setDoubleValue: inputPeak * 10];
-    [self.outputLevelMeter setDoubleValue: outputPeak * 10];
+    float previousInputGain, inputPeak, outputPeak;
+    NSTimer *timer;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-   
-    Superpowered::Initialize(
-     "ExampleLicenseKey-WillExpire-OnNextUpdate"
-    );
 
-    // Do any additional setup after loading the view.
+    Superpowered::Initialize("ExampleLicenseKey-WillExpire-OnNextUpdate");
     NSLog(@"Superpowered version: %u", Superpowered::Version());
-    
+
     reverb = new Superpowered::Reverb(48000, 48000);
-    filter = new Superpowered::Filter(
-      Superpowered::Filter::FilterType::Resonant_Lowpass,
-      48000
-    );
-    
+    filter = new Superpowered::Filter(Superpowered::Filter::FilterType::Resonant_Lowpass, 48000);
+
     reverb->enabled = true;
     filter->enabled = true;
 
-    self.superpowered = [[SuperpoweredOSXAudioIO alloc] initWithDelegate:(id<SuperpoweredOSXAudioIODelegate>)self preferredBufferSizeMs:12 numberOfChannels:2 enableInput:true enableOutput:true];
-    [self setVariables];
-    [self.superpowered start];
-    
-    // Start Meter animaion loop (100fps)
-    self.timer = [NSTimer timerWithTimeInterval:1.0/100.0 target:self selector:@selector(animate) userInfo:nil repeats:YES];
-    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
+    [self paramChanged:nil];
+    previousInputGain = 0;
+
+    audioIO = [[SuperpoweredOSXAudioIO alloc] initWithDelegate:(id<SuperpoweredOSXAudioIODelegate>)self preferredBufferSizeMs:12 numberOfChannels:2 enableInput:true enableOutput:true];
+    [audioIO start];
+
+    // Start timer to update the meters.
+    timer = [NSTimer timerWithTimeInterval:1.0/100.0 target:self selector:@selector(animate) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
 }
 
-- (void)setVariables {
-    inputGain = self.inputGainSlider.floatValue;
-    filterFrequency = self.filterFrequencySlider.floatValue;
-    reverbMix = self.reverbMixSlider.floatValue;
+- (void)dealloc {
+    // Stop the timer.
+    [timer invalidate];
+    // Stops and deallocates audioIO (because ARC is enabled).
+    // audioProcessingCallback is not called after this.
+    audioIO = nil;
+    // Now it's safe to delete the rest.
+    delete reverb;
+    delete filter;
+}
+
+- (void)animate {
+    [self.inputLevelMeter setDoubleValue:inputPeak * 10];
+    [self.outputLevelMeter setDoubleValue:outputPeak * 10];
+}
+
+- (IBAction)paramChanged:(id)sender {
+    // Set the current values of the effects.
+    // This function is called on the main thread and can concurrently happen with audioProcessingCallback, but the Superpowered effects are prepared to handle concurrency.
+    // Values are automatically smoothed as well, so no audio artifacts can be heard.
+    filter->frequency = self.filterFrequencySlider.floatValue;
+    reverb->mix = self.reverbMixSlider.floatValue;
 }
 
 - (bool)audioProcessingCallback:(float *)inputBuffer outputBuffer:(float *)outputBuffer numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
-    
-    // Ensure the samplerate is in sync on every audio processing callback
+    // Ensure the sample rate is in sync on every audio processing callback.
     reverb->samplerate = samplerate;
     filter->samplerate = samplerate;
 
-    reverb->mix = reverbMix;
-    filter->frequency = filterFrequency;
+    // The second argument of the Peak function is the number of values, not a number of frames.
+    // Because inputBuffer is stereo, the number of frames is multiplied by two (channels).
+    inputPeak = Superpowered::Peak(inputBuffer, numberOfFrames * 2);
 
-    + inputPeak = (double) Superpowered::Peak(inputBuffer, numberOfFrames);
-
+    // Apply volume while copy the input buffer to the output buffer.
+    // Gain is smoothed, starting from "previousInputGain" to "inputGain".
+    float inputGain = self.inputGainSlider.floatValue;
     Superpowered::Volume(inputBuffer, outputBuffer, previousInputGain, inputGain, numberOfFrames);
-    previousInputGain = inputGain;
+    previousInputGain = inputGain; // Save the gain for the next round.
 
-    // Apply reverb
+    // Apply reverb to output (in-place).
     reverb->process(outputBuffer, outputBuffer, numberOfFrames);
 
-    // Apply the filter
+    // Apply the filter (in-place).
     filter->process(outputBuffer, outputBuffer, numberOfFrames);
 
-    + outputPeak = (double) Superpowered::Peak(outputBuffer, numberOfFrames);
+    outputPeak = Superpowered::Peak(outputBuffer, numberOfFrames * 2);
 
     return true;
-}
-
-- (IBAction)parmChanged:(id)sender {
-    [self setVariables];
 }
 
 @end

@@ -2,7 +2,7 @@
 //  AppDelegate.m
 //  SuperpoweredMacOSBoilerplate
 //
-//  Created by Balázs Kiss on 2021. 10. 21..
+//  Created by Balázs Kiss on 2021. 10. 21.
 //
 
 #import "AppDelegate.h"

@@ -1,29 +1,21 @@
-//
-//  ViewController.m
-//  SuperpoweredMacOSBoilerplate
-//
-//  Created by Balázs Kiss and Thomas Dodds on 2021. 10. 21..
-//
-
 #import "ViewController.h"
 #import "Superpowered.h"
 #import "SuperpoweredSimple.h"
 #import "SuperpoweredOSXAudioIO.h"
 #import "SuperpoweredAdvancedAudioPlayer.h"
-#import <atomic>
 
 @interface ViewController ()
 @property (nonatomic, strong) SuperpoweredOSXAudioIO *superpowered;
 @property (weak) IBOutlet NSSlider *localPlaybackRate;
 @property (weak) IBOutlet NSSlider *localPlaybackPitch;
 @property (weak) IBOutlet NSSlider *localGain;
-@property (weak) IBOutlet NSSlider *remoteVolume;
 @property (weak) IBOutlet NSButton *playLocalButton;
+@property (weak) IBOutlet NSSlider *remoteVolume;
 @property (weak) IBOutlet NSButton *playRemoteButton;
-
 @end
 
 @implementation ViewController {
+    SuperpoweredOSXAudioIO *audioIO;
     Superpowered::AdvancedAudioPlayer *playerA, *playerB;
     float localGainValue, localPlaybackRateValue, localPlaybackPitchValue, remoteGainValue;
 }
@@ -31,89 +23,96 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    Superpowered::Initialize(
-     "ExampleLicenseKey-WillExpire-OnNextUpdate"
-    );
+    Superpowered::Initialize("ExampleLicenseKey-WillExpire-OnNextUpdate");
     NSLog(@"Superpowered version: %u", Superpowered::Version());
-    
-    
-    // First let Superpowered know where it can store is temporary files used for buffereing HLS
+
+    // Let Superpowered know where it can store the temporary files used for buffering HLS.
     Superpowered::AdvancedAudioPlayer::setTempFolder([NSTemporaryDirectory() fileSystemRepresentation]);
-    
-    // Create two instances of the AdvancedAudioPlayer class, which we'll use to play our local and HLS stream
+
+    // Create two instances of the AdvancedAudioPlayer class, which we'll use to play our local and HLS stream.
     playerA = new Superpowered::AdvancedAudioPlayer(48000, 0);
     playerB = new Superpowered::AdvancedAudioPlayer(48000, 0);
-    
-    
-    // Tell the first player to open a local file
-    playerA->open([[[NSBundle mainBundle] pathForResource:@"lycka" ofType:@"mp3"] fileSystemRepresentation]);
-    
-    // Tell the second player to open remote HLS stream (apple HLS test stream)
-    playerB->openHLS("http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8");
-    // Set the maximum buffer size in seconds
-    playerB->HLSBufferingSeconds = 20;
-    // Fast forward in the stream a bi before playback
-    playerB->setPosition(6000, true, false);
-    
-    // Set current atomic floats from the UI sliders
-    [self setVariables];
 
-    // Setup superpowered
-    self.superpowered = [[SuperpoweredOSXAudioIO alloc] initWithDelegate:(id<SuperpoweredOSXAudioIODelegate>)self preferredBufferSizeMs:12 numberOfChannels:2 enableInput:false enableOutput:true];
-    
-    // Start the scheduling of audioProcessingCallback
-    [self.superpowered start];
+    // Open a local file.
+    playerA->open([[[NSBundle mainBundle] pathForResource:@"lycka" ofType:@"mp3"] fileSystemRepresentation]);
+
+    // Open a remote HLS stream.
+    playerB->openHLS("http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8");
+    playerB->HLSBufferingSeconds = 20;
+
+    [self updateParams:nil];
+
+    audioIO = [[SuperpoweredOSXAudioIO alloc] initWithDelegate:(id<SuperpoweredOSXAudioIODelegate>)self preferredBufferSizeMs:12 numberOfChannels:2 enableInput:true enableOutput:true];
+    [audioIO start];
 }
 
-
-- (bool)audioProcessingCallback:(float *)inputBuffer outputBuffer:(float *)outputBuffer numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
-    
-    // Ensure the samplerate is in sync on every audio processing callback
-    playerA->outputSamplerate = samplerate;
-    playerB->outputSamplerate = samplerate;
-  
-    // Set the playback rate of the PlayerA to current atomic variable value
-    playerA->playbackRate = localPlaybackRateValue;
-    playerA->pitchShiftCents = localPlaybackPitchValue;
-    
-    // Check player statuses. We're only interested in the Opened event in this example.
-    if (playerA->getLatestEvent() == Superpowered::AdvancedAudioPlayer::PlayerEvent_Opened) {
-        // allow the user to click the play button for playerA
-        self.playLocalButton.enabled = true;
-    };
-   
-    // Store the output of player A into out outputbuffer, checking if it creates silence along the way
-    bool silence = !playerA->processStereo(outputBuffer, false, numberOfFrames, localGainValue);
-    
-    // If silence, then write player B to the output buffer
-    // If no silence, set the mix parameter of playerB's processStereo to true to mix its output into playerA's output
-    if (playerB->processStereo(outputBuffer, !silence, numberOfFrames, remoteGainValue)) silence = false;
-
-    return !silence;
+- (void)dealloc {
+    // Stops and deallocates audioIO (because ARC is enabled).
+    // audioProcessingCallback is not called after this.
+    audioIO = nil;
+    // Now it's safe to delete the rest.
+    delete playerA;
+    delete playerB;
 }
 
 - (IBAction)playLocalAudio:(id)sender {
-    // Check we are able to play local file
-    if (self.playLocalButton.enabled) {
-        playerA->play();
-        self.playLocalButton.enabled = false;
-    }
+    playerA->togglePlayback(); // play/pause
 }
 
 - (IBAction)playRemote:(id)sender {
-    playerB->play();
-    self.playRemoteButton.enabled = false;
+    playerB->togglePlayback(); // play/pause
 }
 
 - (IBAction)updateParams:(id)sender {
-    [self setVariables];
+    // Set some player properties.
+    // This function is called on the main thread and can concurrently happen with audioProcessingCallback, but the Superpowered AdvancedAudioPlayer is prepared to handle concurrency.
+    // Values are automatically smoothed as well, so no audio artifacts can be heard.
+    playerA->playbackRate = self.localPlaybackRate.floatValue;
+    playerA->pitchShiftCents = self.localPlaybackPitch.floatValue;
+
+    // Save the volume values, because those are not player properties.
+    localGainValue = self.localGain.floatValue;
+    remoteGainValue = self.remoteVolume.floatValue;
 }
 
-- (void)setVariables {
-    localGainValue =  self.localGain.floatValue;
-    localPlaybackRateValue =  self.localPlaybackRate.floatValue;
-    localPlaybackPitchValue =  self.localPlaybackPitch.floatValue;
-    remoteGainValue =  self.remoteVolume.floatValue;
+- (void)enableUIForPlayerA {
+    self.playLocalButton.enabled = true;
+    self.localPlaybackRate.enabled = true;
+    self.localPlaybackPitch.enabled = true;
+    self.localGain.enabled = true;
+}
+
+- (void)enableUIForPlayerB {
+    self.playRemoteButton.enabled = true;
+    self.remoteVolume.enabled = true;
+}
+
+- (bool)audioProcessingCallback:(float *)inputBuffer outputBuffer:(float *)outputBuffer numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime {
+    // Ensure the samplerate is in sync on every audio processing callback.
+    playerA->outputSamplerate = samplerate;
+    playerB->outputSamplerate = samplerate;
+
+    // Check player statuses. We're only interested in the Opened event in this example.
+    if (playerA->getLatestEvent() == Superpowered::AdvancedAudioPlayer::PlayerEvent_Opened) {
+        // Enable the UI elements for player A. Apple requires UI updates on the main thread.
+        [self performSelectorOnMainThread:@selector(enableUIForPlayerA) withObject:nil waitUntilDone:NO];
+    };
+
+    if (playerB->getLatestEvent() == Superpowered::AdvancedAudioPlayer::PlayerEvent_Opened) {
+        // Enable the UI elements for player B. Apple requires UI updates on the main thread.
+        [self performSelectorOnMainThread:@selector(enableUIForPlayerB) withObject:nil waitUntilDone:NO];
+        // Fast forward in the stream a bit.
+        playerB->setPosition(6000, true, false);
+    };
+
+    // Store the output of player A into outputBuffer.
+    bool silence = !playerA->processStereo(outputBuffer, false, numberOfFrames, localGainValue);
+
+    // If silence, then player B may overwrite the contents of outputBuffer.
+    // If no silence, then player B may mix its output with the contents of outputBuffer.
+    if (playerB->processStereo(outputBuffer, !silence, numberOfFrames, remoteGainValue)) silence = false;
+
+    return !silence;
 }
 
 @end

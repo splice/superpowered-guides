@@ -1,59 +1,46 @@
-//
-//  ViewController.m
-//  SuperpoweredGuideCapturingAudio
-//
-//  Created by Balázs Kiss and Thomas Dodds on 2021. 10. 21..
-//
-
 #import "ViewController.h"
 #import "Superpowered.h"
 #import "SuperpoweredSimple.h"
 #import "SuperpoweredOSXAudioIO.h"
-#import <atomic>
 
 @interface ViewController ()
-@property (nonatomic, strong) SuperpoweredOSXAudioIO *superpowered;
 @property (weak) IBOutlet NSSlider *inputGainSlider;
-
 @end
 
-
-
 @implementation ViewController {
-    float inputGain, previousInputGain; // our local variable to store incomign changes from the Slider
+    SuperpoweredOSXAudioIO *audioIO;
+    float previousInputGain;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    Superpowered::Initialize(
-     "ExampleLicenseKey-WillExpire-OnNextUpdate"
-    );
-
-    // Do any additional setup after loading the view.
+    Superpowered::Initialize("ExampleLicenseKey-WillExpire-OnNextUpdate");
     NSLog(@"Superpowered version: %u", Superpowered::Version());
-    
-    inputGain = 0.5;
-    previousInputGain = 0.5;
-    
-    self.superpowered = [[SuperpoweredOSXAudioIO alloc] initWithDelegate:(id<SuperpoweredOSXAudioIODelegate>)self preferredBufferSizeMs:12 numberOfChannels:2 enableInput:true enableOutput:true];
-    [self setVariables];
-    [self.superpowered start];
+
+    previousInputGain = 0;
+
+    audioIO = [[SuperpoweredOSXAudioIO alloc] initWithDelegate:(id<SuperpoweredOSXAudioIODelegate>)self preferredBufferSizeMs:12 numberOfChannels:2 enableInput:true enableOutput:true];
+    [audioIO start];
 }
 
-- (void)setVariables {
-        inputGain = self.inputGainSlider.floatValue;
+- (void)dealloc {
+    // Stops and deallocates audioIO (because ARC is enabled).
+    // audioProcessingCallback is not called after this.
+    audioIO = nil;
+}
+
+- (IBAction)paramChanged:(id)sender {
+
 }
 
 - (bool)audioProcessingCallback:(float *)inputBuffer outputBuffer:(float *)outputBuffer numberOfFrames:(unsigned int)numberOfFrames samplerate:(unsigned int)samplerate hostTime:(unsigned long long int)hostTime; {
-    // Apply volume transformation
+    // Apply volume while copy the input buffer to the output buffer.
+    // Gain is smoothed, starting from "previousInputGain" to "inputGain".
+    float inputGain = self.inputGainSlider.floatValue;
     Superpowered::Volume(inputBuffer, outputBuffer, previousInputGain, inputGain, numberOfFrames);
-    previousInputGain = inputGain;
+    previousInputGain = inputGain; // Save the gain for the next round.
     return true;
-}
-
-- (IBAction)parmChanged:(id)sender {
-    [self setVariables];
 }
 
 @end

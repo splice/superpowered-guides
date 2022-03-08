@@ -752,7 +752,7 @@
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="0.40000000000000002" tickMarkPosition="above" sliderType="linear" id="isa-GM-OvN"/>
                                                         <connections>
-                                                            <action selector="parmChanged:" target="XfG-lQ-9wD" id="PAk-qX-nKc"/>
+                                                            <action selector="paramChanged:" target="XfG-lQ-9wD" id="PAk-qX-nKc"/>
                                                         </connections>
                                                     </slider>
                                                 </subviews>

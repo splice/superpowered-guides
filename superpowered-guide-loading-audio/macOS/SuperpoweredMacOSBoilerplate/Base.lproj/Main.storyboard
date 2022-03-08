@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19455"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -784,7 +784,7 @@
                             <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oPY-kP-DK9">
                                 <rect key="frame" x="99" y="290" width="282" height="28"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="0.69999999999999996" tickMarkPosition="above" sliderType="linear" id="MSG-kh-dE2"/>
+                                <sliderCell key="cell" continuous="YES" enabled="NO" state="on" alignment="left" maxValue="1" doubleValue="0.69999999999999996" tickMarkPosition="above" sliderType="linear" id="MSG-kh-dE2"/>
                                 <connections>
                                     <action selector="updateParams:" target="XfG-lQ-9wD" id="cDO-ed-lxJ"/>
                                 </connections>
@@ -792,7 +792,7 @@
                             <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SKG-Hz-8ua">
                                 <rect key="frame" x="99" y="89" width="282" height="28"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="0.69999999999999996" tickMarkPosition="above" sliderType="linear" id="zVJ-qG-eUb"/>
+                                <sliderCell key="cell" continuous="YES" enabled="NO" state="on" alignment="left" maxValue="1" doubleValue="0.69999999999999996" tickMarkPosition="above" sliderType="linear" id="zVJ-qG-eUb"/>
                                 <connections>
                                     <action selector="updateParams:" target="XfG-lQ-9wD" id="D56-C1-Zz0"/>
                                 </connections>
@@ -800,7 +800,7 @@
                             <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uCn-Kq-Jag">
                                 <rect key="frame" x="99" y="240" width="282" height="28"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <sliderCell key="cell" continuous="YES" alignment="left" minValue="0.5" maxValue="2" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="FXG-sh-HvW"/>
+                                <sliderCell key="cell" continuous="YES" enabled="NO" alignment="left" minValue="0.5" maxValue="2" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="FXG-sh-HvW"/>
                                 <connections>
                                     <action selector="updateParams:" target="XfG-lQ-9wD" id="RIn-u4-3aF"/>
                                 </connections>
@@ -808,7 +808,7 @@
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HX4-yj-nQy">
                                 <rect key="frame" x="177" y="324" width="128" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Local player volume" id="3ah-aE-EFJ">
+                                <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" alignment="center" title="Local player volume" id="3ah-aE-EFJ">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -817,7 +817,7 @@
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nsl-lh-8yv">
                                 <rect key="frame" x="176" y="123" width="131" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Remote HLS volume" id="m6Q-Ay-aOb">
+                                <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" alignment="center" title="Remote HLS volume" id="m6Q-Ay-aOb">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -826,7 +826,7 @@
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rPV-YR-6GD">
                                 <rect key="frame" x="178" y="268" width="126" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Local playback rate" id="JUD-Hw-Nzd">
+                                <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" alignment="center" title="Local playback rate" id="JUD-Hw-Nzd">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -835,7 +835,7 @@
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="apk-Zw-ux1">
                                 <rect key="frame" x="147" y="173" width="185" height="19"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="roundRect" title="Play local file" bezelStyle="roundedRect" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" inset="2" id="Ysy-B0-rDP">
+                                <buttonCell key="cell" type="roundRect" title="Play local file" bezelStyle="roundedRect" alignment="center" lineBreakMode="truncatingTail" enabled="NO" state="on" borderStyle="border" inset="2" id="Ysy-B0-rDP">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="cellTitle"/>
                                 </buttonCell>
