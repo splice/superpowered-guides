@@ -16,7 +16,7 @@ class DemoApplication {
   }
 
   // First define a handler that will be called whenever this.sendMessageToMainScope is called from the AudioWorkletProcessor scope
-  onMessageProcessorAudioScope(message) {
+  onMessageProcessorAudioScope(message) { 
     if (message.event === "ready") {
       console.log(message);
     }

@@ -1,10 +1,9 @@
-// Import the SuperpoweredWebAudio helper to allow us to extend the SuperpoweredWebAudio.AudioWorkletProcessor class
 import { SuperpoweredWebAudio } from "../superpowered/SuperpoweredWebAudio.js";
 
 class PlayerProcessor extends SuperpoweredWebAudio.AudioWorkletProcessor {
-  // Runs after the constructor
+
+  // Runs after the constructor.
   onReady() {
-    this.mixer = new this.Superpowered.StereoMixer();
     this.player = new this.Superpowered.AdvancedAudioPlayer(
       this.samplerate,
       2,
@@ -17,30 +16,22 @@ class PlayerProcessor extends SuperpoweredWebAudio.AudioWorkletProcessor {
     this.player.loopOnEOF = true;
     this.playerGain = 1;
 
-    // Pass an event object over to the main scope to tell it everything is ready
+    // Notify the main scope that we're prepared.
     this.sendMessageToMainScope({ event: "ready" });
   }
 
   // onDestruct is called when the parent AudioWorkletNode.destruct() method is called.
-  // You should clear up all SP class instances here.
+  // You should clear up all Superpowered objects and allocated buffers here.
   onDestruct() {
     this.player.destruct();
   }
 
+  // Messages are received from the main scope through this method.
   onMessageFromMainScope(message) {
-    if (message.type === "command") {
-      this.handleIncomingCommand(message);
-    }
     if (message.type === "parameterChange") {
-      if (message.payload.id === "localPlayerVolume") {
-        this.playerGain = message.payload.value;
-      }
-      if (message.payload.id === "localPlayerRate") {
-        this.player.playbackRate = message.payload.value;
-      }
-      if (message.payload.id === "localPlayerPitch") {
-        this.player.pitchShiftCents = message.payload.value;
-      }
+      if (message.payload.id === "localPlayerVolume") this.playerGain = message.payload.value;
+      else if (message.payload.id === "localPlayerRate") this.player.playbackRate = message.payload.value;
+      else if (message.payload.id === "localPlayerPitch") this.player.pitchShiftCents = message.payload.value;
     }
     if (message.SuperpoweredLoaded) {
       this.player.pause();
@@ -57,19 +48,17 @@ class PlayerProcessor extends SuperpoweredWebAudio.AudioWorkletProcessor {
   }
 
   processAudio(inputBuffer, outputBuffer, buffersize, parameters) {
-    // Ensure the samplerate is in sync on every audio processing callback
+    // Ensure the samplerate is in sync on every audio processing callback.
     this.player.outputSamplerate = this.samplerate;
 
-    // Render the output buffers
-
-    if (!this.player.processStereo(outputBuffer.pointer,false,buffersize,this.playerGain)) {
-      //If no player output, set output to 0s
-      this.Superpowered.memorySet(outputBuffer.pointer, 0, buffersize * 8); // 8 bytes for each frame (1 channel is 4 bytes)
+    // Render into the output buffer.
+    if (!this.player.processStereo(outputBuffer.pointer, false, buffersize, this.playerGain)) {
+      // If no player output, set output to 0s.
+      this.Superpowered.memorySet(outputBuffer.pointer, 0, buffersize * 8); // 8 bytes for each frame (1 channel is 4 bytes, two channels)
     }
   }
 }
 
-// The following code registers the processor script in the browser, notice the label and reference
-if (typeof AudioWorkletProcessor !== "undefined")
-  registerProcessor("PlayerProcessor", PlayerProcessor);
+// The following code registers the processor script in the browser, please note the label and reference.
+if (typeof AudioWorkletProcessor !== "undefined") registerProcessor("PlayerProcessor", PlayerProcessor);
 export default PlayerProcessor;

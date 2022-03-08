@@ -1,51 +1,48 @@
-// Import the SuperpoweredWebAudio helper to allow us to extend the SuperpoweredWebAudio.AudioWorkletProcessor class
 import { SuperpoweredWebAudio } from "../superpowered/SuperpoweredWebAudio.js";
 
 class MeteringProcessor extends SuperpoweredWebAudio.AudioWorkletProcessor {
-  // Runs after the constructor
+
+  // Runs after the constructor.
   onReady() {
     this.reverb = new this.Superpowered.Reverb(
-      this.samplerate, // The initial sample rate in Hz.
-      this.samplerate // Maximum sample rate (affects memory usage, the lower the smaller).
-    );
-
-    this.inputFilter = new this.Superpowered.Filter(
-      this.Superpowered.Filter.Resonant_Highpass,
+      this.samplerate,
       this.samplerate
     );
-    this.inputFilter.frequency = 1000;
-    this.inputFilter.enabled = true;
-
-    this.reverb.mix = 0.5;
     this.reverb.enabled = true;
+    this.reverb.mix = 0.5;
 
-    this.inputGain = 0.4;
-    this.previousInputGain = 0.4;
+    this.filter = new this.Superpowered.Filter(
+      this.Superpowered.Filter.Resonant_Lowpass,
+      this.samplerate
+    );
+    this.filter.resonance = 0.2;
+    this.filter.frequency = 2000;
+    this.filter.enabled = true;
+
+    this.inputGain = 0.2;
+    this.previousInputGain = 0;
+
     this.inputPeakValue = 0;
     this.outputPeakValue = 0;
 
-    // Pass an event object over to the main scope to tell it everything is ready
+    // Notify the main scope that we're prepared.
     this.sendMessageToMainScope({ event: "ready" });
   }
 
   // onDestruct is called when the parent AudioWorkletNode.destruct() method is called.
-  // You should clear up all SP class instances here.
+  // You should clear up all Superpowered objects and allocated buffers here.
   onDestruct() {
-    this.inputFilter.destruct();
     this.reverb.destruct();
+    this.filter.destruct();
   }
 
+  // Messages are received from the main scope through this method.
   onMessageFromMainScope(message) {
-    console.log(message);
     if (message.type === "parameterChange") {
-      if (message.payload?.id === "inputGain")
-        this.inputGain = message.payload.value;
-      if (message.payload?.id === "userInputFilterFreq")
-        this.inputFilter.frequency = message.payload.value;
-      if (message.payload?.id === "userInputReverbMix")
-        this.reverb.mix = message.payload.value;
-    }
-    if (message.type === "dataAnalyzerRequest") {
+      if (message.payload?.id === "inputGain") this.inputGain = message.payload.value;
+      else if (message.payload?.id === "reverbMix") this.reverb.mix = message.payload.value;
+      else if (message.payload?.id === "filterFrequency") this.filter.frequency = message.payload.value;
+    } else if (message.type === "dataAnalyzerRequest") {
       this.sendMessageToMainScope({
         data: {
           analyzerData: {
@@ -58,48 +55,41 @@ class MeteringProcessor extends SuperpoweredWebAudio.AudioWorkletProcessor {
   }
 
   processAudio(inputBuffer, outputBuffer, buffersize, parameters) {
-
-    // Ensure the samplerate is in sync on every audio processing callback
-    this.inputFilter.samplerate = this.samplerate;
+    // Ensure the samplerate is in sync on every audio processing callback.
+    this.filter.samplerate = this.samplerate;
     this.reverb.samplerate = this.samplerate;
 
-    // Render the output buffers
-
-    //pass the raw user singal through the analyzer
+    // The second argument of the Peak function is the number of values, not a number of frames.
+    // Because inputBuffer is stereo, the number of frames is multiplied by two (channels).
     this.inputPeakValue = this.Superpowered.Peak(
-      inputBuffer, // Pointer to floating point numbers. 32-bit interleaved stereo input.
-      buffersize // Number of frames to process.
+      inputBuffer.pointer,
+      buffersize * 2 // Number of frames to process.
     );
 
-    // Apply the input gain to the user input (processing-in-place)
+    // Apply volume while copy the input buffer to the output buffer.
+    // Gain is smoothed, starting from "previousInputGain" to "inputGain".
     this.Superpowered.Volume(
       inputBuffer.pointer,
-      inputBuffer.pointer,
+      outputBuffer.pointer,
       this.previousInputGain,
       this.inputGain,
       buffersize
     );
-    // Keep track of the previous gain value for the next processAudio loop.
-    this.previousInputGain = this.inputGain;
+    this.previousInputGain = this.inputGain; // Save the gain for the next round.
 
-    // aplly the filter to the user input in place
-    this.inputFilter.process(
-      inputBuffer.pointer,
-      inputBuffer.pointer,
-      buffersize
-    );
+    // Apply reverb to output (in-place).
+    this.reverb.process(outputBuffer.pointer, outputBuffer.pointer, buffersize);
 
-    // apply the reverb effec to the filtered user input channel
-    this.reverb.process(inputBuffer.pointer, outputBuffer.pointer, buffersize);
+    // Apply the filter (in-place).
+    this.filter.process(outputBuffer.pointer, outputBuffer.pointer, buffersize);
 
     this.outputPeakValue = this.Superpowered.Peak(
-      outputBuffer, // Pointer to floating point numbers. 32-bit interleaved stereo input.
-      buffersize // Number of frames to process.
+      outputBuffer.pointer,
+      buffersize * 2
     );
   }
 }
 
-// The following code registers the processor script in the browser, notice the label and reference
-if (typeof AudioWorkletProcessor !== "undefined")
-  registerProcessor("MeteringProcessor", MeteringProcessor);
+// The following code registers the processor script in the browser, please note the label and reference.
+if (typeof AudioWorkletProcessor !== "undefined") registerProcessor("MeteringProcessor", MeteringProcessor);
 export default MeteringProcessor;
