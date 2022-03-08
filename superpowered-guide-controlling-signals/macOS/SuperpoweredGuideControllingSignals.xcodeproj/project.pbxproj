@@ -32,8 +32,8 @@
 		986B71EF2721B4AE00359D2D /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
 		986B71F12721B4C200359D2D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		986B71F32721B52900359D2D /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
-		D58382C027D116AB00766C64 /* SuperpoweredOSXAudioIO.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SuperpoweredOSXAudioIO.mm; path = ../../../libs/Superpowered/OpenSource/SuperpoweredOSXAudioIO.mm; sourceTree = "<group>"; };
-		D58382C127D116AB00766C64 /* SuperpoweredOSXAudioIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SuperpoweredOSXAudioIO.h; path = ../../../libs/Superpowered/OpenSource/SuperpoweredOSXAudioIO.h; sourceTree = "<group>"; };
+		D58382C027D116AB00766C64 /* SuperpoweredOSXAudioIO.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SuperpoweredOSXAudioIO.mm; path = ../../libs/Superpowered/OpenSource/SuperpoweredOSXAudioIO.mm; sourceTree = "<group>"; };
+		D58382C127D116AB00766C64 /* SuperpoweredOSXAudioIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SuperpoweredOSXAudioIO.h; path = ../../libs/Superpowered/OpenSource/SuperpoweredOSXAudioIO.h; sourceTree = "<group>"; };
 		D58382C327D116BC00766C64 /* libSuperpoweredAudio.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libSuperpoweredAudio.xcframework; path = ../../libs/Superpowered/libSuperpoweredAudio.xcframework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -55,7 +55,16 @@
 		986B71CA2721B24C00359D2D = {
 			isa = PBXGroup;
 			children = (
-				986B71D52721B24C00359D2D /* SuperpoweredMacOSBoilerplate */,
+				986B71D62721B24C00359D2D /* AppDelegate.h */,
+				986B71D72721B24C00359D2D /* AppDelegate.m */,
+				986B71D92721B24C00359D2D /* ViewController.h */,
+				986B71DA2721B24C00359D2D /* ViewController.mm */,
+				D58382C127D116AB00766C64 /* SuperpoweredOSXAudioIO.h */,
+				D58382C027D116AB00766C64 /* SuperpoweredOSXAudioIO.mm */,
+				986B71DC2721B24F00359D2D /* Assets.xcassets */,
+				986B71DE2721B24F00359D2D /* Main.storyboard */,
+				986B71E12721B24F00359D2D /* main.m */,
+				986B71E32721B24F00359D2D /* SuperpoweredMacOSBoilerplate.entitlements */,
 				986B71D42721B24C00359D2D /* Products */,
 				986B71E92721B2DD00359D2D /* Frameworks */,
 			);
@@ -67,23 +76,6 @@
 				986B71D32721B24C00359D2D /* SuperpoweredMacOSBoilerplate.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		986B71D52721B24C00359D2D /* SuperpoweredMacOSBoilerplate */ = {
-			isa = PBXGroup;
-			children = (
-				986B71D62721B24C00359D2D /* AppDelegate.h */,
-				986B71D72721B24C00359D2D /* AppDelegate.m */,
-				986B71D92721B24C00359D2D /* ViewController.h */,
-				986B71DA2721B24C00359D2D /* ViewController.mm */,
-				D58382C127D116AB00766C64 /* SuperpoweredOSXAudioIO.h */,
-				D58382C027D116AB00766C64 /* SuperpoweredOSXAudioIO.mm */,
-				986B71DC2721B24F00359D2D /* Assets.xcassets */,
-				986B71DE2721B24F00359D2D /* Main.storyboard */,
-				986B71E12721B24F00359D2D /* main.m */,
-				986B71E32721B24F00359D2D /* SuperpoweredMacOSBoilerplate.entitlements */,
-			);
-			path = SuperpoweredMacOSBoilerplate;
 			sourceTree = "<group>";
 		};
 		986B71E92721B2DD00359D2D /* Frameworks */ = {
@@ -303,7 +295,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SuperpoweredMacOSBoilerplate/SuperpoweredMacOSBoilerplate.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SuperpoweredMacOSBoilerplate.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -331,7 +323,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SuperpoweredMacOSBoilerplate/SuperpoweredMacOSBoilerplate.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SuperpoweredMacOSBoilerplate.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;

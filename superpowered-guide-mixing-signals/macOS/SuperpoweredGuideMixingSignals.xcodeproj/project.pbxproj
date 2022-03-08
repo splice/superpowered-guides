@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		21064E7827D77024008AB871 /* SuperpoweredOSXAudioIO.mm in Sources */ = {isa = PBXBuildFile; fileRef = 21064E7727D77024008AB871 /* SuperpoweredOSXAudioIO.mm */; };
 		986B71D82721B24C00359D2D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 986B71D72721B24C00359D2D /* AppDelegate.m */; };
 		986B71DB2721B24C00359D2D /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 986B71DA2721B24C00359D2D /* ViewController.mm */; };
 		986B71DD2721B24F00359D2D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 986B71DC2721B24F00359D2D /* Assets.xcassets */; };
@@ -15,11 +16,12 @@
 		986B71F02721B4AE00359D2D /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 986B71EF2721B4AE00359D2D /* AudioUnit.framework */; };
 		986B71F22721B4C200359D2D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 986B71F12721B4C200359D2D /* AudioToolbox.framework */; };
 		986B71F42721B52900359D2D /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 986B71F32721B52900359D2D /* CoreAudio.framework */; };
-		D59EBD7327D0FAF40043C8E2 /* SuperpoweredOSXAudioIO.mm in Sources */ = {isa = PBXBuildFile; fileRef = D59EBD7227D0FAF30043C8E2 /* SuperpoweredOSXAudioIO.mm */; };
 		D59EBD7527D0FB600043C8E2 /* libSuperpoweredAudio.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D59EBD7427D0FB600043C8E2 /* libSuperpoweredAudio.xcframework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		21064E7627D77024008AB871 /* SuperpoweredOSXAudioIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SuperpoweredOSXAudioIO.h; path = ../../libs/Superpowered/OpenSource/SuperpoweredOSXAudioIO.h; sourceTree = "<group>"; };
+		21064E7727D77024008AB871 /* SuperpoweredOSXAudioIO.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SuperpoweredOSXAudioIO.mm; path = ../../libs/Superpowered/OpenSource/SuperpoweredOSXAudioIO.mm; sourceTree = "<group>"; };
 		986B71D32721B24C00359D2D /* SuperpoweredMacOSBoilerplate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SuperpoweredMacOSBoilerplate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		986B71D62721B24C00359D2D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		986B71D72721B24C00359D2D /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -32,8 +34,6 @@
 		986B71EF2721B4AE00359D2D /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
 		986B71F12721B4C200359D2D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		986B71F32721B52900359D2D /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
-		D59EBD7127D0FAF30043C8E2 /* SuperpoweredOSXAudioIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SuperpoweredOSXAudioIO.h; path = ../../../libs/Superpowered/OpenSource/SuperpoweredOSXAudioIO.h; sourceTree = "<group>"; };
-		D59EBD7227D0FAF30043C8E2 /* SuperpoweredOSXAudioIO.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SuperpoweredOSXAudioIO.mm; path = ../../../libs/Superpowered/OpenSource/SuperpoweredOSXAudioIO.mm; sourceTree = "<group>"; };
 		D59EBD7427D0FB600043C8E2 /* libSuperpoweredAudio.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libSuperpoweredAudio.xcframework; path = ../../libs/Superpowered/libSuperpoweredAudio.xcframework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -55,7 +55,16 @@
 		986B71CA2721B24C00359D2D = {
 			isa = PBXGroup;
 			children = (
-				986B71D52721B24C00359D2D /* SuperpoweredMacOSBoilerplate */,
+				21064E7627D77024008AB871 /* SuperpoweredOSXAudioIO.h */,
+				21064E7727D77024008AB871 /* SuperpoweredOSXAudioIO.mm */,
+				986B71D62721B24C00359D2D /* AppDelegate.h */,
+				986B71D72721B24C00359D2D /* AppDelegate.m */,
+				986B71D92721B24C00359D2D /* ViewController.h */,
+				986B71DA2721B24C00359D2D /* ViewController.mm */,
+				986B71DC2721B24F00359D2D /* Assets.xcassets */,
+				986B71DE2721B24F00359D2D /* Main.storyboard */,
+				986B71E12721B24F00359D2D /* main.m */,
+				986B71E32721B24F00359D2D /* SuperpoweredMacOSBoilerplate.entitlements */,
 				986B71D42721B24C00359D2D /* Products */,
 				986B71E92721B2DD00359D2D /* Frameworks */,
 			);
@@ -67,23 +76,6 @@
 				986B71D32721B24C00359D2D /* SuperpoweredMacOSBoilerplate.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		986B71D52721B24C00359D2D /* SuperpoweredMacOSBoilerplate */ = {
-			isa = PBXGroup;
-			children = (
-				986B71D62721B24C00359D2D /* AppDelegate.h */,
-				986B71D72721B24C00359D2D /* AppDelegate.m */,
-				986B71D92721B24C00359D2D /* ViewController.h */,
-				986B71DA2721B24C00359D2D /* ViewController.mm */,
-				D59EBD7127D0FAF30043C8E2 /* SuperpoweredOSXAudioIO.h */,
-				D59EBD7227D0FAF30043C8E2 /* SuperpoweredOSXAudioIO.mm */,
-				986B71DC2721B24F00359D2D /* Assets.xcassets */,
-				986B71DE2721B24F00359D2D /* Main.storyboard */,
-				986B71E12721B24F00359D2D /* main.m */,
-				986B71E32721B24F00359D2D /* SuperpoweredMacOSBoilerplate.entitlements */,
-			);
-			path = SuperpoweredMacOSBoilerplate;
 			sourceTree = "<group>";
 		};
 		986B71E92721B2DD00359D2D /* Frameworks */ = {
@@ -168,7 +160,7 @@
 			files = (
 				986B71DB2721B24C00359D2D /* ViewController.mm in Sources */,
 				986B71E22721B24F00359D2D /* main.m in Sources */,
-				D59EBD7327D0FAF40043C8E2 /* SuperpoweredOSXAudioIO.mm in Sources */,
+				21064E7827D77024008AB871 /* SuperpoweredOSXAudioIO.mm in Sources */,
 				986B71D82721B24C00359D2D /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -303,7 +295,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SuperpoweredMacOSBoilerplate/SuperpoweredMacOSBoilerplate.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SuperpoweredMacOSBoilerplate.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -331,7 +323,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SuperpoweredMacOSBoilerplate/SuperpoweredMacOSBoilerplate.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SuperpoweredMacOSBoilerplate.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
